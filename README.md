@@ -11,7 +11,7 @@ This repository is a research log, not a trading signal service and not an acade
 | # | Note | Status |
 |---|------|--------|
 | 00 | [Can You Trade Crypto Profitably by Formula?](00-introduction/can-you-trade-crypto-profitably.md) | `Published` |
-| 01 | The Grid Bot Illusion | `Planned` |
+| 01 | [The Grid Bot Illusion](01-grid/grid-bot-illusion.md) | `Published` · `Literature-based` |
 | 02 | Momentum: Evidence from a Binance Replication | `Planned` |
 | 03 | Trend: When Published Edge Ages | `Planned` |
 | 04 | Carry: A Real Edge I Wouldn't Trade | `Planned` |
@@ -39,4 +39,4 @@ The underlying event-detection system (Klines) referenced in some notes is propr
 
 ## References
 
-A consolidated bibliography (20+ academic sources reviewed across momentum, trend, carry, reversal, and market microstructure) will be published in `references/bibliography.md` as the series progresses.
+Literature is organized into two reference lists, published in `references/`: [reference-1-strategy-literature.md](references/reference-1-strategy-literature.md) covers strategy and factor literature tested against the Binance universe (momentum, trend, carry, reversal, grid, VRP); [reference-2-microstructure-literature.md](references/reference-2-microstructure-literature.md) covers the market microstructure and event literature. Both are updated as the series progresses.
