@@ -2,6 +2,8 @@
 
 *Independent Research into Systematic Crypto Trading & Market Microstructure*
 
+**Author: Oleg Arefev**
+
 Can a retail trader systematically extract an edge from cryptocurrency markets — and does that edge remain worth trading after costs, infrastructure constraints, and a simple investment benchmark?
 
 This repository is a research log, not a trading signal service and not an academic publication. Each note follows the same pipeline: **literature → reverse engineering → replication on Binance data → gross → net-of-costs → significance testing → verdict**. Negative and inconclusive results are published alongside positive ones — a closed hypothesis is still a result.
