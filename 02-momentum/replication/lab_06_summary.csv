@@ -1,0 +1,2 @@
+weeks;bucket;universe_median;long_mean_pct;short_mean_pct;spread_mean_pct;spread_median_pct;spread_std_pp;weeks_positive;p_within_week_perm;p_sign_flip;boot_ci_lo;boot_ci_hi;jack_min;jack_max
+32;квинтиль;162;-1.4796;-0.2849;-1.1947;-1.4516;7.3066;13;0.3119;0.3753;-3.716;1.4295;-1.8491;-0.6391
