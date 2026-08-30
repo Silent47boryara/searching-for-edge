@@ -1,5 +1,7 @@
 # 02 — Momentum: Evidence from a Binance Replication
 
+**Author:** Oleg Arefev
+**Published:** August 2026
 **Status:** `Published`
 **Class:** Empirically tested (own replication, gross and net-of-costs, significance tests) + Literature-based (fund practice, heavy tails)
 
@@ -259,3 +261,9 @@ This doesn't mean momentum as a phenomenon is a myth, or that a more elaborate i
 - Grobys, K., Sapkota, N. (2019). "Cryptocurrencies and momentum." *Economics Letters*, 180, 6–10.
 - Moskowitz, T., Ooi, Y. H., Pedersen, L. H. (2012). "Time Series Momentum." *Journal of Financial Economics*, 104(2). (Background reference for the time-series/cross-sectional momentum distinction.)
 - Han, Y., Zhou, G., Zhu, Y. "Taming Momentum Crashes: A Simple Stop-Loss Strategy." SSRN 2407199. (Background reference on momentum crash risk and stop-loss overlays — referenced for context on why risk overlays are treated as a separate hypothesis, not tested in this note.)
+
+---
+
+**Author:** Oleg Arefev
+**Project:** [Searching for Edge](https://github.com/Silent47boryara/searching-for-edge)
+**Repository:** [Silent47boryara/searching-for-edge](https://github.com/Silent47boryara/searching-for-edge)
