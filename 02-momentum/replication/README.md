@@ -1,6 +1,6 @@
 # Replication code — Research Note 02 (Momentum)
 
-This folder contains the actual scripts and result artifacts behind the numbers cited in Research Note 02 — Momentum (published alongside this folder, in `02-momentum/`). It is published so the note's claims can be checked against code and output, not just against prose.
+This folder contains the actual scripts and result artifacts behind the numbers cited in [Research Note 02 — Momentum](../momentum-evidence-from-binance-replication.md). It is published so the note's claims can be checked against code and output, not just against prose.
 
 ## What's here
 
