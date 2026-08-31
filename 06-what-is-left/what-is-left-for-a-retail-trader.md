@@ -2,7 +2,7 @@
 
 **Author:** Oleg Arefev
 **Published:** August 2026
-**Status:** `Open` — the paper math holds up walk-forward; the one thing paper can't test (real fill) hasn't been tested live yet
+**Status:** `Open` — current research note; paper results are walk-forward stable, while execution validation and deeper robustness testing remain ongoing
 **Class:** Author's own system, described conceptually, not literature-tested — this note is not a review of someone else's paper, it's an account of what survived after checking a system built independently against the literature it turned out to resemble
 
 **Research question:** Parts I–V of this series went hypothesis first: read a published strategy, check whether it's statistically real, check whether it's reachable and tradable by a retail account, verdict. This note goes the other way. A detector had already been running for months — built from manual replay and case-by-case review of Binance volume spikes, not from a paper — before any of this series' literature was read carefully. Only after it had a stable shape did it become worth checking against academic work. This note is that check: what the system turned out to be built on, what the numbers say, and what's still honestly open.
@@ -41,11 +41,13 @@ The honest summary of this check: four separate threads of independent, unrelate
 
 ## 3. What actually gets filtered — the funnel, described, not coded
 
+What follows is a compressed description of a much longer process, and that compression is worth naming before describing the result. The small structure below is what survived repeated historical replays, case-by-case failure review, feature rejection, proxy testing, data-integrity checks, exit-method comparisons, and several rounds of rebuilding and retesting the same hypotheses on new samples. Most candidate ideas along the way did not survive that process. None of the intermediate thresholds or implementation details are reproduced here — what follows is only the shape that remained after most of it was thrown away.
+
 No thresholds, no scoring formulas, no exact filter definitions — those stay unpublished, same disclosure boundary as the rest of this repository. What can be described honestly is the shape of the funnel, because the shape is the actual finding.
 
 The starting point is raw: a continuous scan across Binance pairs for abnormal volume, producing a large number of raw candidate rows every day — the great majority of which are exactly what the literature above predicts they'd be: noise, dead flat ranges, or moves that already peaked before they were even visible. That raw stream is not a source of signal by itself; it's a haystack.
 
-Filtering happens in stages, cutting hard at each one — this is the "system of filters, proxy search" (система фильтров, поиск прокси) referenced in this note's brief. A candidate first has to clear a set of hard rules before it's actioned at all (the core-filters layer). What passes gets tiered by signal quality — from the strongest, most complete pattern down to the tier that means "skip." Only the top tiers get a few minutes of live monitoring before a hold/cancel decision, and only what survives *that* — confirmed continuation, no early failure — becomes a position at all. From a large raw stream, this leaves a small number of tradeable signals per day. That ratio — brutal, not gentle — is the entire point of the funnel: it exists specifically to throw away everything the literature above says is structurally unprofitable to chase (a pump already past its 8-minute peak, a late entry with negative expected value, a spike that's just noise).
+Filtering happens in stages, cutting hard at each one — a system of filters and proxy search, in the sense that follows. A candidate first has to clear a set of hard rules before it's actioned at all (the core-filters layer). What passes gets tiered by signal quality — from the strongest, most complete pattern down to the tier that means "skip." Only the top tiers get a few minutes of live monitoring before a hold/cancel decision, and only what survives *that* — confirmed continuation, no early failure — becomes a position at all. From a large raw stream, this leaves a small number of tradeable signals per day. That ratio — brutal, not gentle — is the entire point of the funnel: it exists specifically to throw away everything the literature above says is structurally unprofitable to chase (a pump already past its 8-minute peak, a late entry with negative expected value, a spike that's just noise).
 
 What survives the funnel splits again, cleanly, into two tiers with separate track records — described next.
 
@@ -89,7 +91,7 @@ That gap is not being closed by tuning this system further — a detector built 
 
 On the same bars this series has applied to other people's published strategies — plausible mechanism, independent convergence with unrelated literature, and a walk-forward-stable paper track record rather than a single lucky window — this system clears them. What it does not have is a resolved answer on execution reality, and, separately, a named and currently uncovered class of moves it isn't built to catch at all.
 
-Both of those stay stated here rather than smoothed over. Nothing in this note should be read as a claim that the system is fully automated, or that its profitability is proven. It is not run unattended, and its replay and paper-trade findings are not a guaranteed live edge — they're paper results, walk-forward-stable on paper, with one specific, named gap (fill) still unverified in the only way that can verify it: trading it, small, for real.
+Both of those stay stated here rather than smoothed over. Nothing in this note should be read as a claim that the system is fully automated, or that its profitability is proven. It is not run unattended, and its replay and paper-trade findings are not a guaranteed live edge — they're paper results, walk-forward-stable on paper, with live execution still unverified and the broader robustness analysis still ongoing.
 
 So — can a retail trader actually run something like this? On paper, in essence, yes. Live, with the one open variable still open: yes, with a manual check sitting on top of it, not without one.
 
