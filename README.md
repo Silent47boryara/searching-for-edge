@@ -16,7 +16,7 @@ This repository is a research log, not a trading signal service and not an acade
 | 01 | [The Grid Bot Illusion](01-grid/grid-bot-illusion.md) | `Published` · `Literature-based` |
 | 02 | [Momentum: Evidence from a Binance Replication](02-momentum/momentum-evidence-from-binance-replication.md) | `Published` · `Empirically tested` |
 | 03 | [Trend: When Published Edge Ages](03-trend/trend-when-published-edge-ages.md) | `Published` · `Literature-based` |
-| 04 | Carry: A Real Edge I Wouldn't Trade | `Planned` |
+| 04 | [Carry: A Real Edge I Wouldn't Trade](04-carry/carry-a-real-edge-i-wouldnt-trade.md) | `Published` · `Empirically tested` |
 | 05 | Reversal: How a Backtest Fooled Me | `Planned` |
 | 06 | What Is Left for a Retail Trader? | `Planned` |
 
