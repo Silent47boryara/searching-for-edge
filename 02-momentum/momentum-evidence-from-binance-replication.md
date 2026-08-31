@@ -247,8 +247,7 @@ This doesn't mean momentum as a phenomenon is a myth, or that a more elaborate i
 
 ## Changelog
 
-- `v0.1`–`v0.6` (Russian draft, internal) — built from verified primary sources (LTW 2019 presentation slides, Starkiller Capital SSRN 4322637, Grobys et al. 2025 FMPM, Dobrynskaya HSE working paper, Li & Zhu 2024, Grobys & Sapkota 2019, and our own Lab 06 gate-check / Step 3 / Step 4 results), through several editorial rounds that removed overclaiming, resolved an internal contradiction about coin size and momentum, distinguished jackknife from individual outlier weeks, softened the infinite-variance claim to a question about inference reliability rather than the statistics themselves, and added four figures built directly from the lab's own CSV output.
-- English adaptation — published alongside the replication code and figures in this repository.
+- Built from verified primary sources (LTW 2019 presentation slides, Starkiller Capital SSRN 4322637, Grobys et al. 2025 FMPM, Dobrynskaya HSE working paper, Li & Zhu 2024, Grobys & Sapkota 2019, and our own Lab 06 gate-check / Step 3 / Step 4 results), through several editorial rounds that removed overclaiming, resolved an internal contradiction about coin size and momentum, distinguished jackknife from individual outlier weeks, softened the infinite-variance claim to a question about inference reliability rather than the statistics themselves, and added four figures built directly from the lab's own CSV output. Published alongside the replication code and figures in this repository.
 
 ## References
 
