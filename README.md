@@ -18,7 +18,7 @@ This repository is a research log, not a trading signal service and not an acade
 | 03 | [Trend: When Published Edge Ages](03-trend/trend-when-published-edge-ages.md) | `Published` · `Literature-based` |
 | 04 | [Carry: A Real Edge I Wouldn't Trade](04-carry/carry-a-real-edge-i-wouldnt-trade.md) | `Published` · `Empirically tested` |
 | 05 | [Reversal: Two Kinds of Mean Reversion, One Closed on Sight](05-reversal/reversal-two-kinds-of-mean-reversion.md) | `Published` · `Open` (Branch A closed, Branch B awaiting its own Gate replication) |
-| 06 | What Is Left for a Retail Trader? | `Planned` |
+| 06 | [What Is Left for a Retail Trader?](06-what-is-left/what-is-left-for-a-retail-trader.md) | `Published` · `Open` |
 
 Each note, once published, is tagged with how it was established:
 `Literature-based` (summarizes published findings, no own backtest) · `Empirically tested` (own replication with gross/net numbers and significance tests) · `In progress` (partial results, not yet closed) · `Open` (published with an honest verdict on part of the hypothesis, while another part is explicitly left for a future replication rather than forced to a premature close).
