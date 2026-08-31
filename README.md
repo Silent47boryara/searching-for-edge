@@ -15,7 +15,7 @@ This repository is a research log, not a trading signal service and not an acade
 | 00 | [Can You Trade Crypto Profitably by Formula?](00-introduction/can-you-trade-crypto-profitably.md) | `Published` |
 | 01 | [The Grid Bot Illusion](01-grid/grid-bot-illusion.md) | `Published` · `Literature-based` |
 | 02 | [Momentum: Evidence from a Binance Replication](02-momentum/momentum-evidence-from-binance-replication.md) | `Published` · `Empirically tested` |
-| 03 | Trend: When Published Edge Ages | `Planned` |
+| 03 | [Trend: When Published Edge Ages](03-trend/trend-when-published-edge-ages.md) | `Published` · `Literature-based` |
 | 04 | Carry: A Real Edge I Wouldn't Trade | `Planned` |
 | 05 | Reversal: How a Backtest Fooled Me | `Planned` |
 | 06 | What Is Left for a Retail Trader? | `Planned` |
@@ -28,8 +28,11 @@ Each note, once published, is tagged with how it was established:
 Every candidate strategy is checked against the same discipline before it is allowed into a note:
 
 1. **Statistically real?** — does the effect exist in the published literature and in an independent replication, not just in a chart that looks convincing.
-2. **Tradable net-of-costs?** — does it survive realistic fees, spread, slippage, funding, and execution — not the gross number from the paper.
-3. **Worth trading versus the benchmark?** — does it beat the best available alternative use of the same capital, given the risk and effort involved.
+2. **Reachable by retail?** — even where a published number is positive, does capturing it require a universe, a fee tier, or a market regime that a retail trader can actually access today — not just on paper, and not just in a market that no longer exists.
+3. **Tradable net-of-costs?** — does it survive realistic fees, spread, slippage, funding, and execution — not the gross number from the paper.
+4. **Worth trading versus the benchmark?** — does it beat the best available alternative use of the same capital, given the risk and effort involved.
+
+Any one of these four failing is sufficient to close a hypothesis — they aren't ranked, and a strategy doesn't need to fail all four to be closed. Part I (Grid) found separate failures across its three mechanically distinct variants — a zero-expected-value result for the classical form, retained market-beta exposure for the dynamic form, and, for the delta-neutral form specifically, a reported result resting on gate 2 (an institutional-only fee tier, plus an incomplete fill model). Part II (Momentum) closed on gate 3 (costs, after an own replication). Part III (Trend) closed on gates 1 and 2 together, without needing a replication, because gate 1 already failed in the regime that matters and gate 2 failed on both candidate universes in the literature itself.
 
 A maximum of two independently published implementations is tested per hypothesis class. If both fail, the class is closed — no third variant is tried "to save it."
 
