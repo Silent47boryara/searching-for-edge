@@ -2,6 +2,8 @@
 
 **Status:** `Published`
 
+**Formal write-up:** [Grid Trading in Cryptocurrency Markets: A Critical Evaluation of Classical, Dynamic, and Delta-Neutral Implementations](https://ssrn.com/abstract=7376359) — SSRN working paper, August 2026.
+
 **Research question:** Does grid trading generate an independent trading edge, or does its profitability primarily come from market exposure, execution economics, and market-making infrastructure?
 
 ## 1. Why Grid Looks So Attractive
@@ -128,6 +130,7 @@ It's worth walking through this chapter's full arc to see the method this series
 
 ## References
 
+- Arefev, O. (2026). "Grid Trading in Cryptocurrency Markets: A Critical Evaluation of Classical, Dynamic, and Delta-Neutral Implementations." SSRN 7376359. https://ssrn.com/abstract=7376359 — DOI: 10.2139/ssrn.7376359. *(Formal write-up of this note's argument.)*
 - Chen, K.-Y., Chen, K.-H., Jang, J.-S. R. (2025). "Dynamic Grid Trading Strategy: From Zero Expectation to Market Outperformance." arXiv:2506.11921.
 - Nguyen, T., Bui, D. (2026). "Delta-Neutral Grid Market Making with Adaptive Hedging." SSRN 6280958.
 - Gort, B. J. D., Liu, X.-Y., Gao, J., Chen, S., Wang, C. D. (2022/2023). "Deep Reinforcement Learning for Cryptocurrency Trading: Practical Approach to Address Backtest Overfitting." arXiv:2209.05559. *(Methodological reference only — not a grid trading source.)*

@@ -25,6 +25,12 @@ Each note, once published, is tagged with how it was established:
 
 Note 06 is not another literature-tested hypothesis — it's Oleg's own synthesis, presenting Klines (the event-detection system referenced elsewhere in this repository, not published in full — see below) and the discretion built around it as one candidate answer to the series' opening question, in the author's own voice. It's held to the same disclosure standard as every other note: no automation claims, no guaranteed profitability, findings framed as what was observed, not what's proven.
 
+## Publications
+
+Work from this series formally written up and deposited where it can be cited. A paper here is not a separate research result — it is one of the notes above, restated to academic standards and made citable.
+
+- **Grid Trading in Cryptocurrency Markets: A Critical Evaluation of Classical, Dynamic, and Delta-Neutral Implementations** (August 2026) — the formal write-up of [Note 01](01-grid/grid-bot-illusion.md). SSRN working paper: [ssrn.com/abstract=7376359](https://ssrn.com/abstract=7376359) · DOI: [10.2139/ssrn.7376359](https://doi.org/10.2139/ssrn.7376359)
+
 ## On the Horizon
 
 Candidates identified but not yet active, kept visible rather than quietly dropped. Two different reasons keep something here rather than in the numbered series above: it needs infrastructure this project doesn't have, or it's genuinely too new to have a verdict yet.
