@@ -49,6 +49,15 @@ The starting point is raw: a continuous scan across Binance pairs for abnormal v
 
 Filtering happens in stages, cutting hard at each one — a system of filters and proxy search, in the sense that follows. A candidate first has to clear a set of hard rules before it's actioned at all (the core-filters layer). What passes gets tiered by signal quality — from the strongest, most complete pattern down to the tier that means "skip." Only the top tiers get a few minutes of live monitoring before a hold/cancel decision, and only what survives *that* — confirmed continuation, no early failure — becomes a position at all. From a large raw stream, this leaves a small number of tradeable signals per day. That ratio — brutal, not gentle — is the entire point of the funnel: it exists specifically to throw away everything the literature above says is structurally unprofitable to chase (a pump already past its 8-minute peak, a late entry with negative expected value, a spike that's just noise).
 
+**A representative month — August 2026.** The shape above is easier to see with one month's actual counts. The detector has been collecting and testing continuously for about four months (signal detection since early May 2026; the raw Stage-0 scan longer still), so August is shown here as a representative sample, not a hand-picked one:
+
+- **Collected:** 143,118 raw volume anomalies over the month — about 4,090 per day.
+- **Cleared into a signal of any tier:** 326 — that is 0.23% of the raw stream. Of those: BRONZE 191, WATCH 112 (alert-only, never traded standalone), GOLD 23.
+- **Routed to execution:** 214 candidates (0.15% of raw) — GOLD reviewed by hand, BRONZE-with-impulse handled by the engine.
+- **Net:** roughly six tradeable signals a day out of ~4,000 raw anomalies.
+
+These are aggregate counts taken directly from the system's own logs, not thresholds or formulas — the filtering logic that produces the cut stays unpublished, the same disclosure boundary as the rest of this repository. The point of showing them is the funnel's brutality, which is the actual finding: the overwhelming majority of what the scan collects is thrown away on purpose.
+
 What survives the funnel splits again, cleanly, into two tiers with separate track records — described next.
 
 ## 4. The statistics — what actually gets measured
