@@ -33,6 +33,7 @@ Note 06 is not another literature-tested hypothesis — it's Oleg's own synthesi
 Work from this series formally written up and deposited where it can be cited. A paper here is not a separate research result — it is one of the notes above, restated to academic standards and made citable.
 
 - **Grid Trading in Cryptocurrency Markets: A Critical Evaluation of Classical, Dynamic, and Delta-Neutral Implementations** (August 2026) — the formal write-up of [Note 01](01-grid/grid-bot-illusion.md). SSRN working paper: [ssrn.com/abstract=7376359](https://ssrn.com/abstract=7376359) · DOI: [10.2139/ssrn.7376359](https://doi.org/10.2139/ssrn.7376359)
+- **Time-Series Momentum in Cryptocurrency: A Published Edge That Has Aged — Regime-Dependence and Retail Feasibility (2016–2023)** (September 2026) — the formal write-up of [Note 03](03-trend/trend-when-published-edge-ages.md). SSRN working paper: [ssrn.com/abstract=7405060](https://ssrn.com/abstract=7405060) · DOI: [10.2139/ssrn.7405060](https://doi.org/10.2139/ssrn.7405060)
 
 ## On the Horizon
 
