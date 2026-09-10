@@ -22,6 +22,7 @@ This repository is a research log, not a trading signal service and not an acade
 | 05 | [Reversal: Two Kinds of Mean Reversion, One Closed on Sight](05-reversal/reversal-two-kinds-of-mean-reversion.md) | `Published` · `Open` (Branch A closed, Branch B awaiting its own Gate replication) |
 | 06 | [What Is Left for a Retail Trader?](06-what-is-left/what-is-left-for-a-retail-trader.md) | `Published` · `Open` |
 | 07 | [BOS: A Structural Scanner, Not a Predictor](07-bos/bos-a-structural-scanner-not-a-predictor.md) | `Published` · `Open` (core structural detection in production; options/gamma overlay under test, decision end of Sep 2026) |
+| 08 | [Binance Skills Hub: We Reviewed 19 Skills and Found No Ready-Made CEX Strategy](08-binance-skills-hub-audit/binance-skills-hub-audit.md) | `Published` · `Empirically tested` |
 
 Each note, once published, is tagged with how it was established:
 `Literature-based` (summarizes published findings, no own backtest) · `Empirically tested` (own replication with gross/net numbers and significance tests) · `In progress` (partial results, not yet closed) · `Open` (published with an honest verdict on part of the hypothesis, while another part is explicitly left for a future replication rather than forced to a premature close).
