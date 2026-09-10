@@ -22,10 +22,10 @@ This repository is a research log, not a trading signal service and not an acade
 | 05 | [Reversal: Two Kinds of Mean Reversion, One Closed on Sight](05-reversal/reversal-two-kinds-of-mean-reversion.md) | `Published` · `Open` (Branch A closed, Branch B awaiting its own Gate replication) |
 | 06 | [What Is Left for a Retail Trader?](06-what-is-left/what-is-left-for-a-retail-trader.md) | `Published` · `Open` |
 | 07 | [BOS: A Structural Scanner, Not a Predictor](07-bos/bos-a-structural-scanner-not-a-predictor.md) | `Published` · `Open` (core structural detection in production; options/gamma overlay under test, decision end of Sep 2026) |
-| 08 | [Binance Skills Hub: We Reviewed 19 Skills and Found No Ready-Made CEX Strategy](08-binance-skills-hub-audit/binance-skills-hub-audit.md) | `Published` · `Empirically tested` |
+| 08 | [Binance Skills Hub: We Reviewed 19 Skills and Found No Ready-Made CEX Strategy](08-binance-skills-hub-audit/binance-skills-hub-audit.md) | `Published` · `Audit` |
 
 Each note, once published, is tagged with how it was established:
-`Literature-based` (summarizes published findings, no own backtest) · `Empirically tested` (own replication with gross/net numbers and significance tests) · `In progress` (partial results, not yet closed) · `Open` (published with an honest verdict on part of the hypothesis, while another part is explicitly left for a future replication rather than forced to a premature close).
+`Literature-based` (summarizes published findings, no own backtest) · `Empirically tested` (own replication with gross/net numbers and significance tests) · `Audit` (static inspection and live checks of tools, claims, data access, and reproducibility; not a strategy backtest) · `In progress` (partial results, not yet closed) · `Open` (published with an honest verdict on part of the hypothesis, while another part is explicitly left for a future replication rather than forced to a premature close).
 
 Note 06 is not another literature-tested hypothesis — it's Oleg's own synthesis, presenting Klines (the event-detection system referenced elsewhere in this repository, not published in full — see below) and the discretion built around it as one candidate answer to the series' opening question, in the author's own voice. It's held to the same disclosure standard as every other note: no automation claims, no guaranteed profitability, findings framed as what was observed, not what's proven.
 
