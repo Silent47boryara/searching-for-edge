@@ -5,6 +5,8 @@
 **Status:** `Published`
 **Class:** Empirically tested (own replication, gross and net-of-costs, significance tests) + Literature-based (fund practice, heavy tails)
 
+**Formal write-up:** [Cross-Sectional Momentum in Cryptocurrency: A Net-of-Costs Replication on Tradable Binance Perpetuals (2020-2026)](https://ssrn.com/abstract=7404139) — SSRN working paper, September 2026. DOI: [10.2139/ssrn.7404139](https://dx.doi.org/10.2139/ssrn.7404139).
+
 **Research question:** on a practically tradable Binance universe (USDⓈ-M perpetual futures), does a cross-sectional momentum spread remain statistically distinguishable from zero after realistic trading costs — rather than only on paper, in an academic article or a theoretical gross backtest?
 
 ---
@@ -251,6 +253,7 @@ This doesn't mean momentum as a phenomenon is a myth, or that a more elaborate i
 
 ## References
 
+- Arefev, O. (2026). "Cross-Sectional Momentum in Cryptocurrency: A Net-of-Costs Replication on Tradable Binance Perpetuals (2020-2026)." SSRN 7404139. https://ssrn.com/abstract=7404139 — DOI: 10.2139/ssrn.7404139. *(Formal write-up of this note's argument.)*
 - Liu, Y., Tsyvinski, A., Wu, X. (2022). "Common Risk Factors in Cryptocurrency." *The Journal of Finance*, 77(6). Also circulated as NBER Working Paper w25882.
 - Liu, Y. Conference presentation slides (Nov 2019) — double-sort size × momentum results and shorting-constraint discussion.
 - Drogen, L., Hoffstein, C., Otte, K. (2023). "Cross-sectional Momentum in Cryptocurrency Markets." Starkiller Capital, January 2023. SSRN 4322637.
