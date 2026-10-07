@@ -1,0 +1,12 @@
+{
+ "file": "BTCUSDT_4h_binance_raw.csv",
+ "source": "https://api.binance.com/api/v3/klines",
+ "symbol": "BTCUSDT",
+ "interval": "4h",
+ "downloaded_utc": "2026-10-07T09:33:01.314470Z",
+ "first_open_utc": "2026-04-01 00:00:00+00:00",
+ "last_open_utc": "2026-10-07 04:00:00+00:00",
+ "rows": 1136,
+ "gaps_n": 0,
+ "closed_only": true
+}

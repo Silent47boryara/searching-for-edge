@@ -1,0 +1,69 @@
+kind,label,T,oi_ok,gamma_ok,funding_ok,liq_cov24h,liq_valid_at_T,liq_ok,tape_ok,all_ok
+episode_start,1d,2026-08-21 00:00:00,False,False,False,1.0,True,False,False,False
+episode_start,4h,2026-08-25 04:00:00,False,True,False,1.0,True,False,False,False
+episode_start,1h,2026-08-28 19:00:00,False,True,False,1.0,True,False,False,False
+multi_tf_transition,1D BULL / 4H BULL / 1H NONE,2026-08-29 15:00:00,True,True,True,1.0,True,False,False,False
+episode_start,1h,2026-08-30 17:00:00,True,True,True,1.0,True,True,False,False
+multi_tf_transition,1D BULL / 4H BULL / 1H BULL,2026-08-30 17:00:00,True,True,True,1.0,True,True,False,False
+multi_tf_transition,1D BULL / 4H NONE / 1H BULL,2026-08-31 00:00:00,True,True,True,1.0,True,True,True,True
+multi_tf_transition,1D BULL / 4H NONE / 1H NONE,2026-09-01 09:00:00,True,True,True,1.0,True,True,True,True
+multi_tf_transition,1D BULL / 4H NONE / 1H BEAR,2026-09-01 18:00:00,True,True,True,0.9999768518518518,True,True,True,True
+episode_start,1h,2026-09-01 18:00:00,True,True,True,0.9999768518518518,True,True,True,True
+multi_tf_transition,1D BULL / 4H NONE / 1H NONE,2026-09-03 03:00:00,True,True,True,0.9999768518518518,True,True,True,True
+multi_tf_transition,1D BULL / 4H NONE / 1H BULL,2026-09-03 13:00:00,True,True,True,0.7990972222222222,True,False,True,False
+episode_start,1h,2026-09-03 13:00:00,True,True,True,0.7990972222222222,True,False,True,False
+multi_tf_transition,1D BULL / 4H BULL / 1H BULL,2026-09-03 16:00:00,True,True,True,0.7990972222222222,True,False,True,False
+episode_start,4h,2026-09-03 16:00:00,True,True,True,0.7990972222222222,True,False,True,False
+multi_tf_transition,1D BULL / 4H BULL / 1H NONE,2026-09-04 13:00:00,True,True,True,1.0,True,True,True,True
+episode_start,1h,2026-09-06 04:00:00,True,True,True,0.9986342592592593,True,True,True,True
+multi_tf_transition,1D BULL / 4H BULL / 1H BULL,2026-09-06 04:00:00,True,True,True,0.9986342592592593,True,True,True,True
+episode_start,1h,2026-09-07 08:00:00,True,True,True,1.0,True,True,True,True
+multi_tf_transition,1D BULL / 4H BULL / 1H BEAR,2026-09-07 08:00:00,True,True,True,1.0,True,True,True,True
+multi_tf_transition,1D BULL / 4H NONE / 1H BEAR,2026-09-07 16:00:00,True,True,True,1.0,True,True,True,True
+multi_tf_transition,1D BULL / 4H NONE / 1H NONE,2026-09-09 05:00:00,True,True,True,1.0,True,True,True,True
+multi_tf_transition,1D BULL / 4H NONE / 1H BEAR,2026-09-09 23:00:00,True,True,True,0.9849074074074075,True,True,True,True
+episode_start,1h,2026-09-09 23:00:00,True,True,True,0.9849074074074075,True,True,True,True
+multi_tf_transition,1D BULL / 4H BEAR / 1H BEAR,2026-09-10 16:00:00,True,True,True,0.9999768518518518,True,True,True,True
+episode_start,4h,2026-09-10 16:00:00,True,True,True,0.9999768518518518,True,True,True,True
+multi_tf_transition,1D BULL / 4H BEAR / 1H NONE,2026-09-11 13:00:00,True,True,True,0.9988425925925926,True,True,True,True
+multi_tf_transition,1D BULL / 4H BEAR / 1H BEAR,2026-09-12 19:00:00,True,True,True,0.33777777777777773,True,False,True,False
+episode_start,1h,2026-09-12 19:00:00,True,True,True,0.33777777777777773,True,False,True,False
+multi_tf_transition,1D BULL / 4H BEAR / 1H NONE,2026-09-14 03:00:00,True,True,True,0.9894907407407407,True,True,True,True
+multi_tf_transition,1D BULL / 4H NONE / 1H NONE,2026-09-14 04:00:00,True,True,True,0.9894907407407407,True,True,True,True
+multi_tf_transition,1D BULL / 4H NONE / 1H BULL,2026-09-14 10:00:00,True,True,True,1.0,True,True,True,True
+episode_start,1h,2026-09-14 10:00:00,True,True,True,1.0,True,True,True,True
+multi_tf_transition,1D BULL / 4H NONE / 1H NONE,2026-09-15 07:00:00,True,True,True,0.9993402777777778,True,True,True,True
+multi_tf_transition,1D BULL / 4H NONE / 1H BEAR,2026-09-15 14:00:00,False,False,False,0.835925925925926,False,False,True,False
+episode_start,1h,2026-09-15 14:00:00,False,False,False,0.835925925925926,False,False,True,False
+episode_start,4h,2026-09-15 20:00:00,True,True,True,0.8325578703703704,True,False,True,False
+multi_tf_transition,1D BULL / 4H BEAR / 1H BEAR,2026-09-15 20:00:00,True,True,True,0.8325578703703704,True,False,True,False
+multi_tf_transition,1D NONE / 4H BEAR / 1H BEAR,2026-09-16 00:00:00,True,True,True,0.8330555555555555,True,False,True,False
+multi_tf_transition,1D NONE / 4H BEAR / 1H NONE,2026-09-16 12:00:00,True,True,True,0.7437731481481482,True,False,True,False
+episode_start,1h,2026-09-18 04:00:00,True,True,True,0.9999768518518518,True,True,True,True
+multi_tf_transition,1D NONE / 4H NONE / 1H BULL,2026-09-18 04:00:00,True,True,True,0.9999768518518518,True,True,True,True
+multi_tf_transition,1D NONE / 4H BULL / 1H BULL,2026-09-18 16:00:00,True,True,True,1.0,True,True,True,True
+episode_start,4h,2026-09-18 16:00:00,True,True,True,1.0,True,True,True,True
+multi_tf_transition,1D BULL / 4H BULL / 1H BULL,2026-09-19 00:00:00,True,True,True,1.0,True,True,True,True
+episode_start,1d,2026-09-19 00:00:00,True,True,True,1.0,True,True,True,True
+multi_tf_transition,1D BULL / 4H BULL / 1H NONE,2026-09-19 22:00:00,True,True,True,0.804849537037037,True,False,True,False
+multi_tf_transition,1D BULL / 4H BULL / 1H BULL,2026-09-20 16:00:00,True,True,True,0.8151041666666666,True,False,True,False
+episode_start,1h,2026-09-20 16:00:00,True,True,True,0.8151041666666666,True,False,True,False
+multi_tf_transition,1D BULL / 4H BULL / 1H NONE,2026-09-23 09:00:00,False,False,False,0.8653125,False,False,True,False
+multi_tf_transition,1D BULL / 4H NONE / 1H NONE,2026-09-23 16:00:00,False,True,True,0.8316898148148149,True,False,True,False
+episode_start,1h,2026-09-24 10:00:00,True,True,True,0.9987731481481481,True,True,True,True
+multi_tf_transition,1D BULL / 4H NONE / 1H BEAR,2026-09-24 10:00:00,True,True,True,0.9987731481481481,True,True,True,True
+multi_tf_transition,1D BULL / 4H NONE / 1H NONE,2026-09-26 23:00:00,True,True,True,1.0,True,True,True,True
+episode_start,1h,2026-09-28 02:00:00,True,True,True,0.8370717592592593,True,False,True,False
+multi_tf_transition,1D BULL / 4H NONE / 1H BEAR,2026-09-28 02:00:00,True,True,True,0.8370717592592593,True,False,True,False
+multi_tf_transition,1D BULL / 4H NONE / 1H NONE,2026-09-28 19:00:00,True,True,True,0.9570601851851852,True,True,True,True
+episode_start,1h,2026-09-30 13:00:00,True,True,True,0.9997685185185186,True,True,True,True
+multi_tf_transition,1D BULL / 4H NONE / 1H BULL,2026-09-30 13:00:00,True,True,True,0.9997685185185186,True,True,True,True
+episode_start,4h,2026-10-02 08:00:00,True,True,True,0.8974884259259259,True,False,False,False
+multi_tf_transition,1D BULL / 4H BULL / 1H BULL,2026-10-02 08:00:00,True,True,True,0.8974884259259259,True,False,False,False
+multi_tf_transition,1D BULL / 4H BULL / 1H NONE,2026-10-02 16:00:00,True,False,True,0.8887962962962963,True,False,False,False
+episode_start,1h,2026-10-04 21:00:00,True,False,True,0.9976851851851852,True,True,False,False
+multi_tf_transition,1D BULL / 4H BULL / 1H BULL,2026-10-04 21:00:00,True,False,True,0.9976851851851852,True,True,False,False
+multi_tf_transition,1D BULL / 4H BULL / 1H NONE,2026-10-05 15:00:00,True,False,True,0.9971412037037037,True,True,False,False
+multi_tf_transition,1D BULL / 4H BULL / 1H BEAR,2026-10-07 02:00:00,True,False,True,0.9969907407407408,True,True,False,False
+episode_start,1h,2026-10-07 02:00:00,True,False,True,0.9969907407407408,True,True,False,False
+multi_tf_transition,1D BULL / 4H NONE / 1H BEAR,2026-10-07 04:00:00,True,False,True,0.998287037037037,True,True,False,False
