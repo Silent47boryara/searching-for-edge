@@ -1,0 +1,24 @@
+tf        model       BA  switches_per_day
+1h     original 0.524512          0.901403
+1h    lag_fixed 0.524091          0.896169
+1h        ema20 0.746994          5.669534
+1h ema20_hold24 0.454181          0.632727
+4h     original 0.533765          0.225709
+4h    lag_fixed 0.534096          0.225709
+4h        ema20 0.738816          1.278214
+4h ema20_hold24 0.427980          0.150875
+1d     original 0.482808          0.039092
+1d    lag_fixed 0.482808          0.039092
+1d        ema20 0.736808          0.238335
+1d ema20_hold24 0.473806          0.029004
+                        n  coverage  inherited  lag_h
+tf model                                             
+1d fallback_contract   61  0.426230   0.196721  114.0
+   lag_fixed           61  0.459016   0.229508   88.5
+   original            61  0.459016   0.229508   88.5
+1h fallback_contract  138  0.934783   0.007246   35.0
+   lag_fixed          138  0.934783   0.021739   35.0
+   original           138  0.934783   0.021739   35.0
+4h fallback_contract  127  0.740157   0.039370   94.5
+   lag_fixed          127  0.740157   0.055118   93.5
+   original           127  0.740157   0.055118   93.5

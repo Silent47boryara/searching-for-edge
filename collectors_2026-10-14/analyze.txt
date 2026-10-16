@@ -1,0 +1,69 @@
+MODEL OI yret4 eligible 184 tested 118
+MODEL OI yvol4 eligible 186 tested 119
+MODEL funding yret4 eligible 184 tested 118
+MODEL funding yvol4 eligible 186 tested 119
+MODEL liquidations yret4 eligible 183 tested 117
+MODEL liquidations yvol4 eligible 185 tested 118
+MODEL gamma yret4 eligible 125 tested 52
+MODEL gamma yvol4 eligible 127 tested 53
+MODEL tape yret4 eligible 158 tested 92
+MODEL tape yvol4 eligible 160 tested 93
+MODEL OI+funding yret4 eligible 184 tested 118
+MODEL OI+funding yvol4 eligible 186 tested 119
+MODEL OI+liquidations yret4 eligible 183 tested 117
+MODEL OI+liquidations yvol4 eligible 185 tested 118
+MODEL OI+tape yret4 eligible 158 tested 92
+MODEL OI+tape yvol4 eligible 160 tested 93
+MODEL funding+liquidations yret4 eligible 183 tested 117
+MODEL funding+liquidations yvol4 eligible 185 tested 118
+MODEL gamma+tape yret4 eligible 124 tested 52
+MODEL gamma+tape yvol4 eligible 126 tested 53
+MODEL liquidations+tape yret4 eligible 157 tested 91
+MODEL liquidations+tape yvol4 eligible 159 tested 92
+MODEL all5 yret4 eligible 123 tested 51
+MODEL all5 yvol4 eligible 125 tested 52
+               group target  eligible_n   n  days  folds  fold_wins  MSE_improvement_pct      CI_lo     CI_hi        p  p_Holm
+                  OI  yret4         184 118    25      5          2             0.288184  -1.077007  0.975599 0.365763     1.0
+                  OI  yvol4         186 119    25      5          1            -0.922316  -2.232754  0.079047 0.946605     1.0
+             funding  yret4         184 118    25      5          0            -1.954234  -3.514372 -0.811265 0.992801     1.0
+             funding  yvol4         186 119    25      5          3            -1.085026  -9.965818  6.766615 0.600640     1.0
+        liquidations  yret4         183 117    25      5          2            -1.852397  -6.064408  2.250915 0.810519     1.0
+        liquidations  yvol4         185 118    25      5          3            -2.001495  -6.756764  1.949282 0.825017     1.0
+               gamma  yret4         125  52    14      3          1            -3.856490 -18.634308  4.772877 0.853915     1.0
+               gamma  yvol4         127  53    14      3          1             2.190159 -14.890492 14.311810 0.397460     1.0
+                tape  yret4         158  92    21      5          3            -0.355586  -3.837792  2.210634 0.600540     1.0
+                tape  yvol4         160  93    21      5          1            -2.919304 -13.963214  5.677459 0.709929     1.0
+          OI+funding  yret4         184 118    25      5          0            -2.040764  -3.921171 -0.778352 0.995400     1.0
+          OI+funding  yvol4         186 119    25      5          2            -2.043775 -11.804823  6.607986 0.653635     1.0
+     OI+liquidations  yret4         183 117    25      5          2             1.784213  -5.296282  6.783004 0.315068     1.0
+     OI+liquidations  yvol4         185 118    25      5          3            -3.526759  -8.277665  0.300079 0.953205     1.0
+             OI+tape  yret4         158  92    21      5          1            -0.353170  -3.260551  1.808595 0.610439     1.0
+             OI+tape  yvol4         160  93    21      5          1            -7.982866 -19.235167  1.712651 0.941906     1.0
+funding+liquidations  yret4         183 117    25      5          2            -5.851564 -13.668701  1.011757 0.919008     1.0
+funding+liquidations  yvol4         185 118    25      5          2            -2.708065 -12.401795  5.125564 0.731427     1.0
+          gamma+tape  yret4         124  52    14      3          1            -3.799824 -18.564204  3.464945 0.857014     1.0
+          gamma+tape  yvol4         126  53    14      3          2             9.796925  -9.049723 24.740840 0.252075     1.0
+   liquidations+tape  yret4         157  91    21      5          2            -1.349411 -13.744046  5.353166 0.623238     1.0
+   liquidations+tape  yvol4         159  92    21      5          1            -7.126877 -20.588923  2.101476 0.913209     1.0
+                all5  yret4         123  51    14      3          1            -3.348282 -39.220232  4.118702 0.725527     1.0
+                all5  yvol4         125  52    14      3          1            -8.528036 -40.856862 16.712154 0.668033     1.0
+EVENTS
+                             event  N  unique_days  control_unique_n  event_R4_mean_pct  event_R4_median_pct  control_R4_mean_pct  control_R4_median_pct  event_RV4_median_pct  matched_RV4_median_pct  event_absR4_median_pct  matched_absR4_median_pct
+                high_liquidations 16           10                26           0.278323             0.190083             0.013119               0.046708              0.669772                0.649518                0.522890                  0.368915
+        OI_down+high_liquidations 12            7                23           0.352570             0.190083             0.072545               0.221131              0.669772                0.666083                0.522890                  0.369136
+OI_up+positive_price+high_funding  1            1                 3           0.378346             0.378346            -0.284490              -0.512139              0.574768                0.841992                0.378346                  0.512139
+ OI_up+negative_price+low_funding 19           11                41          -0.161028            -0.122024             0.139914               0.162361              0.579032                0.511593                0.269305                  0.244604
+               high_tape_activity 21           12                26           0.250819            -0.002407            -0.033658               0.011650              0.701471                0.638914                0.422601                  0.351945
+                  high_gamma_size 14            6                23           0.153085             0.019635            -0.202226              -0.160425              0.637468                0.756981                0.248047                  0.368921
+SCREEN
+  n  days  folds  fold_wins  MSE_improvement_pct      CI_lo     CI_hi        p  baseline_MSE  augmented_MSE  direction_hit_pct  baseline_hit_pct             group target
+92    21      5          3             0.174742  -3.693020  3.989412 0.455954      0.000050       0.000050          54.347826         52.173913              tape  yret4
+93    21      5          2            -4.890897 -16.954499  4.940184 0.811519      0.160999       0.168874                NaN               NaN              tape  yvol4
+92    21      5          2             1.753854  -3.572338  5.078442 0.258974      0.000050       0.000049          53.260870         52.173913           OI+tape  yret4
+93    21      5          1            -7.104806 -21.572957  3.758479 0.877512      0.160999       0.172438                NaN               NaN           OI+tape  yvol4
+52    14      3          2            -3.163689 -11.560647  6.543020 0.773523      0.000057       0.000059          57.692308         51.923077        gamma+tape  yret4
+53    14      3          2            -1.196088 -23.672748 13.869770 0.545545      0.160795       0.162718                NaN               NaN        gamma+tape  yvol4
+91    21      5          2            -1.031567 -17.449723  5.602558 0.570843      0.000050       0.000051          48.351648         52.747253 liquidations+tape  yret4
+92    21      5          1            -7.794028 -18.783881  1.513295 0.943006      0.159843       0.172301                NaN               NaN liquidations+tape  yvol4
+51    14      3          1             1.936314 -26.872524  8.155513 0.386461      0.000058       0.000057          58.823529         52.941176              all5  yret4
+52    14      3          0           -11.137862 -42.860689 10.598795 0.793221      0.159253       0.176990                NaN               NaN              all5  yvol4

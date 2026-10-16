@@ -1,0 +1,7 @@
+model,family,valid_n,rho
+fallback_contract,1H_start,19,0.28947368421052627
+fallback_contract,TRANSITION,49,-0.22102040816326532
+lag_fixed,1H_start,14,0.6175824175824175
+lag_fixed,TRANSITION,35,-0.5621848739495799
+original,1H_start,14,0.6175824175824175
+original,TRANSITION,36,-0.5804375804375805

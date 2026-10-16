@@ -1,0 +1,64 @@
+AST SAME add_indicators True
+AST SAME _detect_swings True
+AST SAME find_all_bos True
+AST SAME _local_pivots True
+AST SAME compute_impulse True
+STRICT GAMMA WINDOW 1858 2026-08-24 20:12:29+00:00 2026-10-07 18:01:36+00:00
+WINDOW EXTREMA 2026-09-15 {'T': Timestamp('2026-09-15 22:07:25+0000', tz='UTC'), 'Price': 75459.64, 'IMP_State': 'ACTIVE', 'IMP_Direction': 'BULL', 'IMP_Break_Level': 76046.58, 'H4_IMP_State': 'ACTIVE', 'H4_IMP_Direction': 'BEAR', 'H1_IMP_State': 'ACTIVE', 'H1_IMP_Direction': 'BEAR', 'Main_Direction': 'NEUTRAL', 'SMC_Label': 'Range', 'Layers_Note': '4H и 1H развернулись против старшей, 1D ещё держится.'} {'T': Timestamp('2026-09-23 04:59:20+0000', tz='UTC'), 'Price': 87194.34, 'IMP_State': 'ACTIVE', 'IMP_Direction': 'BULL', 'IMP_Break_Level': 79600.0, 'H4_IMP_State': 'ACTIVE', 'H4_IMP_Direction': 'BULL', 'H1_IMP_State': 'ACTIVE', 'H1_IMP_Direction': 'BULL', 'Main_Direction': 'NEUTRAL', 'SMC_Label': 'Bullish Range', 'Layers_Note': 'Все три слоя вверх — структура согласована.'}
+LARGEST LOG GAP 0 days 12:35:58
+WINDOW EXTREMA 2026-10-01 {'T': Timestamp('2026-10-01 08:30:40+0000', tz='UTC'), 'Price': 83378.01, 'IMP_State': 'ACTIVE', 'IMP_Direction': 'BULL', 'IMP_Break_Level': 82563.0, 'H4_IMP_State': 'ENDED', 'H4_IMP_Direction': 'BULL', 'H1_IMP_State': 'ACTIVE', 'H1_IMP_Direction': 'BULL', 'Main_Direction': 'NEUTRAL', 'SMC_Label': 'Bullish Range', 'Layers_Note': '1D и 1H в одну сторону, средний слой (4H) без активного импульса.'} {'T': Timestamp('2026-10-02 13:36:05+0000', tz='UTC'), 'Price': 86964.0, 'IMP_State': 'ACTIVE', 'IMP_Direction': 'BULL', 'IMP_Break_Level': 82563.0, 'H4_IMP_State': 'ACTIVE', 'H4_IMP_Direction': 'BULL', 'H1_IMP_State': 'ACTIVE', 'H1_IMP_Direction': 'BULL', 'Main_Direction': 'NEUTRAL', 'SMC_Label': 'Bullish Range', 'Layers_Note': 'Все три слоя вверх — структура согласована.'}
+LARGEST LOG GAP 0 days 01:58:01
+AT FIRST BULL
+H1_IMP_ {'T': Timestamp('2026-09-18 04:17:52+0000', tz='UTC'), 'Price': 77324.47, 'H1_IMP_Start_Time': '18.09 03:00', 'H1_IMP_Start_Price': 77383.47}
+H4_IMP_ {'T': Timestamp('2026-09-18 16:19:43+0000', tz='UTC'), 'Price': 81041.95, 'H4_IMP_Start_Time': '18.09 12:00', 'H4_IMP_Start_Price': 80725.6}
+IMP_ {'T': Timestamp('2026-09-19 00:20:58+0000', tz='UTC'), 'Price': 81034.01, 'IMP_Start_Time': '2026-09-18', 'IMP_Start_Price': 80883.87}
+POINT REPLAY
+                         T tf log_state replay_state log_dir replay_dir   log_start replay_start  log_break  replay_break
+2026-09-18 04:17:52+00:00 1h    ACTIVE       ACTIVE    BULL       BULL 18.09 03:00  18.09 03:00   76970.01      76970.01
+2026-09-18 04:17:52+00:00 4h     ENDED        ENDED    BEAR       BEAR 15.09 16:00  15.09 16:00        NaN           NaN
+2026-09-18 04:17:52+00:00 1d     ENDED        ENDED    BULL       BULL  2026-08-19   2026-08-19        NaN           NaN
+2026-09-18 16:19:43+00:00 1h    ACTIVE       ACTIVE    BULL       BULL 18.09 03:00  18.09 03:00   77972.30      77972.30
+2026-09-18 16:19:43+00:00 4h    ACTIVE       ACTIVE    BULL       BULL 18.09 12:00  18.09 12:00   79600.00      79600.00
+2026-09-18 16:19:43+00:00 1d     ENDED        ENDED    BULL       BULL  2026-08-19   2026-08-19        NaN           NaN
+2026-09-19 00:20:58+00:00 1h    ACTIVE       ACTIVE    BULL       BULL 18.09 03:00  18.09 03:00   77972.30      77972.30
+2026-09-19 00:20:58+00:00 4h    ACTIVE       ACTIVE    BULL       BULL 18.09 12:00  18.09 12:00   79600.00      79600.00
+2026-09-19 00:20:58+00:00 1d    ACTIVE       ACTIVE    BULL       BULL  2026-09-18   2026-09-18   79600.00      79600.00
+2026-09-23 04:59:20+00:00 1h    ACTIVE       ACTIVE    BULL       BULL 20.09 15:00  20.09 15:00   86000.00      86000.00
+2026-09-23 04:59:20+00:00 4h    ACTIVE       ACTIVE    BULL       BULL 18.09 12:00  18.09 12:00   85114.00      85114.00
+2026-09-23 04:59:20+00:00 1d    ACTIVE       ACTIVE    BULL       BULL  2026-09-18   2026-09-18   79600.00      79600.00
+2026-09-23 10:18:52+00:00 1h     ENDED        ENDED    BULL       BULL 20.09 15:00  20.09 15:00        NaN           NaN
+2026-09-23 10:18:52+00:00 4h    ACTIVE       ACTIVE    BULL       BULL 18.09 12:00  18.09 12:00   85114.00      85114.00
+2026-09-23 10:18:52+00:00 1d    ACTIVE       ACTIVE    BULL       BULL  2026-09-18   2026-09-18   79600.00      79600.00
+2026-09-23 22:54:50+00:00 1h     ENDED        ENDED    BULL       BULL 20.09 15:00  20.09 15:00        NaN           NaN
+2026-09-23 22:54:50+00:00 4h     ENDED        ENDED    BULL       BULL 18.09 12:00  18.09 12:00        NaN           NaN
+2026-09-23 22:54:50+00:00 1d    ACTIVE       ACTIVE    BULL       BULL  2026-09-18   2026-09-18   79600.00      79600.00
+2026-10-02 13:36:05+00:00 1h    ACTIVE       ACTIVE    BULL       BULL 30.09 12:00  30.09 12:00   85767.45      85767.45
+2026-10-02 13:36:05+00:00 4h    ACTIVE       ACTIVE    BULL       BULL 02.10 04:00  02.10 04:00   85649.95      85649.95
+2026-10-02 13:36:05+00:00 1d    ACTIVE       ACTIVE    BULL       BULL  2026-09-18   2026-09-18   82563.00      82563.00
+2026-10-02 19:38:40+00:00 1h     ENDED        ENDED    BULL       BULL 30.09 12:00  30.09 12:00        NaN           NaN
+2026-10-02 19:38:40+00:00 4h    ACTIVE       ACTIVE    BULL       BULL 02.10 04:00  02.10 04:00   85649.95      85649.95
+2026-10-02 19:38:40+00:00 1d    ACTIVE       ACTIVE    BULL       BULL  2026-09-18   2026-09-18   82563.00      82563.00
+REAL FALSE BREAK 1h [{'T': '2026-09-24 12:00:00', 'direction': 'BEAR', 'close': 83604.26, 'display_break': 83500.01}, {'T': '2026-09-24 13:00:00', 'direction': 'BEAR', 'close': 84258.43, 'display_break': 83500.01}, {'T': '2026-09-24 14:00:00', 'direction': 'BEAR', 'close': 83673.77, 'display_break': 83500.01}, {'T': '2026-09-24 15:00:00', 'direction': 'BEAR', 'close': 84418.0, 'display_break': 83500.01}, {'T': '2026-09-30 14:00:00', 'direction': 'BULL', 'close': 83800.01, 'display_break': 84563.99}, {'T': '2026-09-30 15:00:00', 'direction': 'BULL', 'close': 84134.43, 'display_break': 84563.99}] N 6
+REAL FALSE BREAK 4h [{'T': '2026-08-25 04:00:00', 'direction': 'BULL', 'close': 79705.79, 'display_break': 80000.0}, {'T': '2026-08-25 08:00:00', 'direction': 'BULL', 'close': 79117.99, 'display_break': 80000.0}, {'T': '2026-08-25 12:00:00', 'direction': 'BULL', 'close': 79502.01, 'display_break': 80000.0}, {'T': '2026-08-25 16:00:00', 'direction': 'BULL', 'close': 78925.95, 'display_break': 80000.0}, {'T': '2026-08-25 20:00:00', 'direction': 'BULL', 'close': 78539.14, 'display_break': 80000.0}, {'T': '2026-08-26 00:00:00', 'direction': 'BULL', 'close': 79088.62, 'display_break': 80000.0}, {'T': '2026-09-11 12:00:00', 'direction': 'BEAR', 'close': 77732.25, 'display_break': 77620.01}, {'T': '2026-10-02 12:00:00', 'direction': 'BULL', 'close': 85326.0, 'display_break': 85649.95}] N 10
+REAL FALSE BREAK 1d [] N 0
+FALLBACK PROBE {'state': 'ACTIVE', 'direction': 'BULL', 'price': 90.0, 'break_level': 100.0, 'dist_to_break_pct': -9.999999999999998, 'break_pivot_time': None}
+BOUNDARY PROBE [(42, -1, 90.0)]
+SEP23 TICKS                         T    Price H4_IMP_State H4_IMP_End_Time
+2026-09-23 00:28:29+00:00 86525.00       ACTIVE             NaN
+2026-09-23 00:58:34+00:00 86436.01       ACTIVE             NaN
+2026-09-23 01:28:40+00:00 86600.00       ACTIVE             NaN
+2026-09-23 01:58:45+00:00 86299.83       ACTIVE             NaN
+2026-09-23 02:28:51+00:00 86576.01       ACTIVE             NaN
+2026-09-23 02:58:56+00:00 86512.06       ACTIVE             NaN
+2026-09-23 03:29:02+00:00 86650.66       ACTIVE             NaN
+2026-09-23 03:59:08+00:00 86704.27       ACTIVE             NaN
+2026-09-23 04:29:14+00:00 87116.01       ACTIVE             NaN
+2026-09-23 04:59:20+00:00 87194.34       ACTIVE             NaN
+2026-09-23 05:29:26+00:00 86748.00       ACTIVE             NaN
+2026-09-23 05:59:32+00:00 86499.99       ACTIVE             NaN
+2026-09-23 08:01:07+00:00 86208.13       ACTIVE             NaN
+2026-09-23 10:18:52+00:00 85803.20       ACTIVE             NaN
+2026-09-23 22:54:50+00:00 84587.29        ENDED     23.09 12:00
+2026-09-23 23:24:55+00:00 84454.43        ENDED     23.09 12:00
+2026-09-23 23:55:01+00:00 84418.01        ENDED     23.09 12:00
+HASH UNCHANGED 85c427e78766fa1548cdcd2a43433ee849ea6beeb1f052da9fd54ecf547f620c

@@ -1,0 +1,53 @@
+MARK read
+OI
+TAPE
+GAMMA read
+/Users/arefevoleg/Documents/ChatGPT/BOS/collectors_2026-10-14/build.py:98: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise an error in a future version of pandas. Value '2026-08-24 19:50:25+00:00' has dtype incompatible with datetime64[ns], please explicitly cast to a compatible dtype first.
+  if pd.isna(g.loc[key,'available']) or t<g.loc[key,'available']:g.loc[key,'available']=t;matched+=1;delays.append((ns(t)-sn[j])/1e9)
+{
+  "mark": {
+    "rows": 3690373,
+    "minutes": 65552,
+    "good_minutes": 61333,
+    "start": "2026-08-29 11:29:00+00:00",
+    "end": "2026-10-14 00:00:00+00:00"
+  },
+  "liq": {
+    "events": 39609,
+    "bad_windows": 207,
+    "heartbeat_last": "2026-10-13 23:55:04+00:00"
+  },
+  "tape": {
+    "trades": 285543,
+    "block_combo_notional_pct": 53.34309373538794,
+    "receive_lag_seconds_quantiles": {
+      "0.5": 8.988452,
+      "0.9": 1415.126659,
+      "0.99": 54310.53791410006
+    },
+    "old_mask_before_retained_log": "2026-09-14 13:59:21+00:00"
+  },
+  "gamma": {
+    "aggregated_snapshots": 6654,
+    "unique_matched_completed": 5275,
+    "completion_delays_q_sec": {
+      "0.5": 17.326874,
+      "0.9": 47.9881166,
+      "0.99": 159.24159070000022,
+      "1.0": 1053.987387
+    }
+  },
+  "available_hourly": {
+    "r1": 996,
+    "r4": 966,
+    "logrv4": 945,
+    "logrv24": 822,
+    "yret4": 926,
+    "yvol4": 945,
+    "oi4": 977,
+    "funding": 1029,
+    "liq_imb": 953,
+    "gamma_A": 778,
+    "tape_flow": 895
+  }
+}

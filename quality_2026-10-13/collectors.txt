@@ -1,0 +1,12 @@
+ORIGINAL starts vs Phase2a 1h 16 17 only new set() only old {(Timestamp('2026-08-28 19:00:00+0000', tz='UTC'), -1)}
+ORIGINAL starts vs Phase2a 4h 5 6 only new set() only old {(Timestamp('2026-08-25 04:00:00+0000', tz='UTC'), 1)}
+TRANSITION counts [{'model': 'original', 'N': 43}, {'model': 'lag_fixed', 'N': 42}, {'model': 'fallback_contract', 'N': 55}]
+            model     family  valid_n       rho
+fallback_contract   1H_start       19  0.289474
+fallback_contract TRANSITION       49 -0.221020
+        lag_fixed   1H_start       14  0.617582
+        lag_fixed TRANSITION       35 -0.562185
+         original   1H_start       14  0.617582
+         original TRANSITION       36 -0.580438
+FROZEN CHECK 1H_start matched 16 feature_maxdiff 4.539424391936109e-14 MAE_maxdiff 8.659739592076221e-15
+FROZEN CHECK TRANSITION matched 43 feature_maxdiff 0.0 MAE_maxdiff 9.43689570931383e-15
