@@ -1,70 +1,70 @@
-# ПРОТОКОЛ: помогают ли данные сборщиков предсказывать судьбу BOS
+# PROTOCOL: do collector data help predict BOS outcomes?
 
-Статус: **черновик, расчёты не запускались, ждёт отмашки Олега.** Составлено 2026-10-07.
-Все пороги, помеченные ⚑, — мои предложения, не установленные факты; утверждает Олег до расчёта.
+Status: **draft; calculations have not started; awaiting Oleg's approval.** Written on 2026-10-07.
+All thresholds marked ⚑ are proposals, not established facts; Oleg must approve them before calculation.
 
-## 1. Вопрос и механизм
+## 1. Question and mechanism
 
-**Вопрос.** Добавляют ли потоки funding / OI / ликвидации (Binance BTCUSDT) и gamma (Deribit) информацию о том, что станет с причинным BOS, сверх самого факта BOS и простой волатильности?
+**Question.** Do funding / OI / liquidation streams (Binance BTCUSDT) and gamma (Deribit) add information about the outcome of a causal BOS beyond the BOS itself and simple volatility?
 
-**Мишень берём только из доказанного** (HANDOFF §4.2–4.3), новых не изобретаем:
-- **Y1 (первичная):** уровень BOS *потерян* к горизонту 5 суток (close вернулся за уровень пробоя). Единый горизонт 5 суток по календарю для всех ТФ.
-- **Y2 (вторичная):** MAE за первые 24 ч, в % от close бара BOS.
+**Use only previously established targets** (HANDOFF §4.2–4.3), without inventing new ones:
+- **Y1 (primary):** the BOS level is *lost* by a horizon of 5 days (the close has moved back across the breakout level). The same horizon of 5 calendar days applies to all timeframes.
+- **Y2 (secondary):** MAE over the first 24 hours, as a percentage of the BOS bar close.
 
-**Механизм (гипотезы, не факты).**
-- Funding и OI показывают перегретость позиций: пробой на раздутом OI с высоким funding в сторону пробоя чаще откатывает.
-- Ликвидации в сторону пробоя могут быть топливом (short squeeze при BOS↑) или признаком исчерпания.
-- Gamma — вторичный, см. §3.
+**Mechanism (hypotheses, not facts).**
+- Funding and OI indicate crowded positioning: a breakout with inflated OI and high funding aligned with the breakout direction is more likely to retrace.
+- Liquidations aligned with the breakout may provide fuel (a short squeeze during BOS↑) or indicate exhaustion.
+- Gamma is secondary; see §3.
 
-Направление BOS не предсказываем (HANDOFF §4.1), его не предсказываем и здесь. Цель — раннее наблюдение, а не прогноз направления.
+We do not predict BOS direction (HANDOFF §4.1), including in this study. The objective is early observation, not a directional forecast.
 
-## 2. Контракт измерения (один на всю лабу)
+## 2. Measurement contract (shared across the lab)
 
-- **BOS:** причинный `find_all_bos` из `bot_v2.py`, SWING_LAG=2, событие = первый бар серии, без изменений параметров. ⚠ Не проверено, что функция корректно работает на 1H/4H (в HANDOFF описана на 1D). Проверить в шаге 0 до всего остального.
-- **Таймфреймы:** 1H и 4H — основные. 1D только описательно (за ~5 недель их 1–3, статистики нет).
-- **Время.** Признак доступен, если `recv_ts_utc ≤ время закрытия бара BOS`. Не `event_time`, не время свечи открытия. Логи в МСК, CSV в UTC: приводить к UTC.
-- **Окно данных:** пересечение чистых периодов: с 2026-08-29 11:28 UTC (старт funding/liq). Gamma — только до 2026-10-02 10:10 UTC. События, у которых окно признака перекрывает дыру в данных, исключаются и пересчитываются в отчёте, не заполняются.
+- **BOS:** causal `find_all_bos` from `bot_v2.py`, SWING_LAG=2; an event is the first bar in a sequence, with no parameter changes. ⚠ Correct operation on 1H/4H has not been verified (HANDOFF describes it on 1D). Check this in Step 0 before anything else.
+- **Timeframes:** 1H and 4H are primary. 1D is descriptive only (there are 1–3 events over ~5 weeks, insufficient for statistical inference).
+- **Time.** A feature is available if `recv_ts_utc ≤ BOS bar close time`. Neither `event_time` nor the candle open time is used. Logs are in Moscow time, CSV files in UTC: normalize to UTC.
+- **Data window:** intersection of clean periods, starting at 2026-08-29 11:28 UTC (funding/liq start). Gamma is used only until 2026-10-02 10:10 UTC. Events whose feature window overlaps a data gap are excluded and recounted in the report; gaps are not filled.
 
-## 3. Признаки: заранее, по одному на семью, ранговые
+## 3. Features: specified in advance, one per family, rank based
 
-Фиксируются до расчёта, пороги не подбираются (используется порядок значений, AUC):
-- **F1 funding:** последнее значение на t × знак направления BOS.
-- **F2 OI:** изменение OI за 24 ч до t, %.
-- **F3 ликвидации:** нотионал ликвидаций *в сторону пробоя* за 24 ч до t, USD.
-- **Baseline-скринер:** |доходность за 24 ч до t|. Любой признак должен обыграть его, иначе это просто волатильность.
-- **Gamma и trade tape: exploratory, без права на вердикт «помогает».** Gamma-агрегат хранит абсолютные значения, знак зависит от допущения о позиции дилеров, которого у нас нет; в окне есть дыра с 2 окт. Tape — нет гипотезы механизма на один признак.
+Fix these before calculation; do not fit thresholds (use value rankings and AUC):
+- **F1 funding:** latest value at t × BOS direction sign.
+- **F2 OI:** OI change over the 24 hours before t, %.
+- **F3 liquidations:** notional liquidated *in the breakout direction* over the 24 hours before t, USD.
+- **Baseline screen:** |return over the 24 hours before t|. Any feature must outperform this; otherwise it merely captures volatility.
+- **Gamma and trade tape: exploratory, ineligible for a verdict of “helps.”** The gamma aggregate stores absolute values; its sign depends on an assumption about dealer positioning that we do not have. The window has a gap starting on October 2. For tape, there is no mechanism hypothesis represented by a single feature.
 
-Семья проверок: 3 признака × 2 ТФ = 6, поправка Holm.
+Test family: 3 features × 2 timeframes = 6, with Holm correction.
 
-## 4. Статистика
+## 4. Statistics
 
-- AUC признака против Y1 (и корреляция Спирмена с Y2).
-- События зависимы (пересекающиеся 5-суточные окна): кластеры BOS, блочный bootstrap по кластерам для CI; плацебо: циклический сдвиг признака во времени на случайные ≥5 суток.
-- Разбивка периода пополам по времени — только для проверки совпадения знака. **Это не независимый holdout:** период уже просмотрен.
-- Для каждого ТФ показать **все** события таблицей и график (свеча + уровень + признак), а не отобранные красивые.
+- Feature AUC against Y1 (and Spearman correlation with Y2).
+- Events are dependent (overlapping 5-day windows): use BOS clusters and a block bootstrap over clusters for CIs; placebo: randomly shift the feature cyclically in time by ≥5 days.
+- Split the period into chronological halves only to check sign consistency. **This is not an independent holdout:** the period has already been examined.
+- For each timeframe, show **all** events in a table and chart (candle + level + feature), rather than selecting attractive examples.
 
-## 5. Шаг 0: ворота мощности (до проверки признаков)
+## 5. Step 0: statistical power gate (before testing features)
 
-Посчитать только число причинных BOS и кластеров по ТФ в чистом окне и **минимально детектируемый AUC**. Грубо: SE ≈ √((n₁+n₂+1)/(12·n₁·n₂)); при ~15 + 15 событиях SE ≈ 0.11, значит видим только AUC ≳ 0.71.
-- Если MDE-AUC > 0.65 ⚑ → признаки не проверяются как проверка гипотезы, вердикт «данных недостаточно», итог — сколько ещё собирать (по текущей частоте BOS).
+Count only causal BOS events and clusters by timeframe in the clean window, and calculate the **minimum detectable AUC**. Roughly: SE ≈ √((n₁+n₂+1)/(12·n₁·n₂)); with ~15 + 15 events, SE ≈ 0.11, so only AUC ≳ 0.71 is detectable.
+- If MDE-AUC > 0.65 ⚑ → do not treat feature analysis as hypothesis testing; the verdict is “insufficient data.” Report how much longer collection is needed at the current BOS frequency.
 
-## 6. Что закрывает вопрос в обе стороны ⚑
+## 6. Criteria for resolving the question in either direction ⚑
 
-- **Помогает (частично):** на ≥1 ТФ AUC>0.5, p после Holm < 0.05, признак обыгрывает baseline (разность AUC, CI > 0) и знак совпал в обеих половинах периода.
-- **Не помогает при этом объёме:** MDE ≤ 0.65 и CI AUC каждого признака внутри [0.40, 0.60]. Отрицательный результат относится к этим трём признакам и этому горизонту, не ко всему семейству методов.
-- **Данных недостаточно:** всё остальное.
+- **Helps (partially):** on ≥1 timeframe, AUC>0.5, Holm-adjusted p < 0.05, the feature outperforms the baseline (AUC difference with CI > 0), and the sign agrees across both halves of the period.
+- **Does not help at this sample size:** MDE ≤ 0.65 and the AUC CI for every feature lies within [0.40, 0.60]. This negative result applies to these three features and this horizon, not to the entire family of methods.
+- **Insufficient data:** everything else.
 
-В любом случае на выходе: сколько событий есть, сколько нужно, через сколько недель при текущей частоте.
+In all cases, report the available event count, the required count, and the number of weeks needed at the current frequency.
 
-## 7. Условия и ограничения
+## 7. Conditions and limitations
 
-- **~5 недель = в основном один режим цены**; результат не переносится на другие режимы без дополнительных данных.
-- **Данные ещё не чисты:** Deribit-потоки (gamma, tape) страдают от маршрута через VPN (`utun8`); funding/liq/OI живые, но дыры (OI 3 сен 286 мин, DNS-сбои 9–12 сен, сегодняшний) надо пересчитать, а не принимать на веру.
-- Для 1H/4H нужны klines BTCUSDT на всё окно + 500 баров прогрева; не проверено, что `BTCUSDT_1h_history_full.csv` доходит до октября.
-- Запрещено: менять пороги бота, добавлять индикаторы/ML, строить из результата торговое правило. Новая гипотеза идёт в журнал, а не в этот расчёт.
+- **~5 weeks mostly represent a single price regime**; findings cannot be generalized to other regimes without additional data.
+- **Data are not yet clean:** Deribit streams (gamma, tape) are affected by VPN routing (`utun8`); funding/liq/OI are running, but gaps (OI on September 3: 286 minutes; DNS failures on September 9–12; today's outage) must be recalculated rather than assumed.
+- For 1H/4H, BTCUSDT klines are needed for the full window plus 500 warm-up bars; it has not been verified that `BTCUSDT_1h_history_full.csv` extends into October.
+- Prohibited: changing bot thresholds, adding indicators/ML, or turning the result into a trading rule. New hypotheses go into the journal, not into this calculation.
 
-## 8. Решения, которые нужны от Олега
+## 8. Decisions needed from Oleg
 
-1. Утвердить Y1/Y2, горизонт 5 суток, три признака и baseline, пороги ⚑.
-2. Разрешить шаг 0 (только подсчёт событий и мощность, без признаков).
-3. Чинить ли маршрут Deribit до расчёта (влияет только на gamma/tape-часть).
+1. Approve Y1/Y2, the 5-day horizon, the three features and baseline, and the ⚑ thresholds.
+2. Authorize Step 0 (event counts and power only, without features).
+3. Decide whether to fix Deribit routing before calculation (affects only the gamma/tape component).

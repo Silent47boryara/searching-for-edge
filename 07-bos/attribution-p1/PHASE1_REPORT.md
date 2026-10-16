@@ -1,150 +1,150 @@
-# BTC BOS × деривативы — Фаза 1, первый результат (аудит, единицы наблюдения, схема join)
+# BTC BOS × derivatives — Phase 1, first result (audit, observation units, join design)
 
-Дата: 2026-10-07. Статус: **первый результат; остановка до ревью**. Фаза 2 (атрибуция) не запускалась, гипотез не проверялось, порогов не подбиралось, `bot_v2.py` не менялся.
-Все времена в UTC. Логи сборщиков в МСК (UTC+3), переведены; колонка `Time` в логе бота — UTC (проверено по mtime файла).
+Date: 2026-10-07. Status: **first result; paused for review**. Phase 2 (attribution) has not started; no hypotheses have been tested, no thresholds fitted, and `bot_v2.py` has not been changed.
+All times are UTC. Collector logs use Moscow time (UTC+3) and have been converted; the `Time` column in the bot log is UTC (checked against file mtime).
 
-## 0. Вердикт
+## 0. Verdict
 
-**Данных недостаточно (расчёт атрибуции не запускался и на этих данных не даст вывода).** Причины, по убыванию значимости:
+**Insufficient data (attribution calculations have not started and cannot yield a conclusion from these data).** Reasons, in descending order of importance:
 
-1. **Независимых режимов 1D почти нет.** В окне общих данных (с 2026‑08‑29 11:28 UTC) на 1D всего **2 BULL‑эпизода**, оба в одном направлении; один начался до окна (лево‑цензурирован), второй ещё идёт (право‑цензурирован). BEAR на 1D нет вообще. По правилу N<10 кластеров любая ячейка, зависящая от 1D, — `INSUFFICIENT SAMPLE`.
-2. **Вложенность.** 4H‑эпизодов в окне 6, 1H‑эпизодов 17, но все они лежат внутри 2–3 режимов 1D. Увеличивать N за счёт вложенных наблюдений нельзя.
-3. **Полнота производных данных на моментах событий:** все пять слоёв одновременно доступны лишь для 11 из 25 стартов эпизодов и для 23 из 43 мульти‑ТФ переходов.
-4. **Общие простои машины** (≈7–8% времени) выбивают все потоки одновременно.
+1. **Almost no independent 1D regimes.** In the common data window (from 2026‑08‑29 11:28 UTC), there are only **2 BULL episodes** on 1D, both in the same direction; one began before the window (left censored), and the other is still active (right censored). There are no BEAR episodes on 1D. Under the N<10 clusters rule, every cell dependent on 1D is `INSUFFICIENT SAMPLE`.
+2. **Nesting.** There are 6 4H episodes and 17 1H episodes in the window, but all lie within 2–3 1D regimes. Nested observations cannot be used to inflate N.
+3. **Derivatives data completeness at event times:** all five layers are simultaneously available for only 11 of 25 episode starts and 23 of 43 multi-timeframe transitions.
+4. **Shared machine outages** (≈7–8% of the time) interrupt all streams simultaneously.
 
-Это допустимый результат фазы 1: «пока недостаточно независимых рыночных режимов, чтобы ответить на вопрос».
+This is an acceptable Phase 1 result: “there are not yet enough independent market regimes to answer the question.”
 
-## 1. Найденные файлы
+## 1. Files found
 
-| Набор | Файл | Объём | Примечание |
+| Dataset | File | Size | Note |
 |---|---|---|---|
-| BOS, исходный код | `bot_v2.py` | 1374 строки, sha256 `b1f4eaa37187cb2917b92471c4dff9f71ecd88e6e3c4d0e539b8cf7abaa996c8` | mtime 2026‑08‑25 17:21; текущий процесс (PID 89821) запущен 2026‑09‑12 11:46, позже изменения файла — одна и та же логика с 25.08 |
-| BOS, боевой лог | `btc_signals_log(*)_v4.csv` | 48 файлов, 1987 строк, 2026‑08‑21 → 2026‑10‑07 | лог пишется каждый тик ~30 мин |
-| Цена (новое) | `LAB_attrib_p1/raw/BTCUSDT_{1d,4h,1h}_binance_raw.csv` | 644 / 1136 / 2745 свечей | Binance spot `/api/v3/klines`, загружено 2026‑10‑07 09:33 UTC, только закрытые, дыр 0, файлы только для чтения (sha256: 1d `f1fcbd1e…`, 4h `f43d66ee…`, 1h `258e784e…`) |
-| Цена (старое) | `BTCUSDT_1h_history_full.csv` и др. | кончаются 20.08 / 28.08, 4H нет | не использованы, не изменены |
-| OI | `oi_raw.csv` | 10 423 | Binance, символ BTCUSDT |
-| funding/mark | `funding_markprice_raw.csv` | 3 123 108 | ~1 строка/с |
-| ликвидации | `liquidations_raw.csv` | 34 026 | Binance forceOrder, выборка |
+| BOS source code | `bot_v2.py` | 1374 lines, sha256 `b1f4eaa37187cb2917b92471c4dff9f71ecd88e6e3c4d0e539b8cf7abaa996c8` | mtime 2026‑08‑25 17:21; the current process (PID 89821) started on 2026‑09‑12 11:46, after the file change — the same logic since 25.08 |
+| BOS production log | `btc_signals_log(*)_v4.csv` | 48 files, 1987 rows, 2026‑08‑21 → 2026‑10‑07 | Written on every tick, ~30 min |
+| Price (new) | `LAB_attrib_p1/raw/BTCUSDT_{1d,4h,1h}_binance_raw.csv` | 644 / 1136 / 2745 candles | Binance spot `/api/v3/klines`, downloaded 2026‑10‑07 09:33 UTC; closed candles only, 0 gaps; read-only files (sha256: 1d `f1fcbd1e…`, 4h `f43d66ee…`, 1h `258e784e…`) |
+| Price (old) | `BTCUSDT_1h_history_full.csv` and others | End on 20.08 / 28.08; no 4H | Not used or modified |
+| OI | `oi_raw.csv` | 10 423 | Binance, symbol BTCUSDT |
+| funding/mark | `funding_markprice_raw.csv` | 3 123 108 | ~1 row/sec |
+| liquidations | `liquidations_raw.csv` | 34 026 | Binance forceOrder, sampled |
 | gamma | `gamma_snapshot_agg.csv` / `gamma_snapshot_raw.csv` | 6 525 / 2 527 713 | Deribit BTC |
 | options tape | `deribit_option_trades_raw.csv` + `deribit_trade_tape_cursor.json` | 246 190 | Deribit |
-| Бэкфиллы (не использованы) | `oi_history_backfill_30d.csv` (8 928), `funding_rate_history_backfill.csv` (500) | | OI‑бэкфилл за 30 дней мог бы закрыть дыры OI — см. §9 |
-| Логи сборщиков | `liq_collector.log`, `funding_oi_collector.log`, `gamma_collector.log`, `deribit_trade_tape_collector.log(.1–.3)` | | используются только как свидетельство работы, не как замена timestamp |
+| Backfills (not used) | `oi_history_backfill_30d.csv` (8 928), `funding_rate_history_backfill.csv` (500) | | The 30-day OI backfill could fill OI gaps — see §9 |
+| Collector logs | `liq_collector.log`, `funding_oi_collector.log`, `gamma_collector.log`, `deribit_trade_tape_collector.log(.1–.3)` | | Used only as evidence of operation, not as substitutes for timestamps |
 
-Код и промежуточные результаты: `LAB_attrib_p1/scripts/01…12_*.py`, `LAB_attrib_p1/out/`. BOS‑код извлечён из `bot_v2.py` дословно по AST (импорт модуля не использовался: он включает `logging.basicConfig` в боевой `bot_errors.log`); в извлечённом файле нет секретов, хеш исходника записан в заголовке `scripts/bot_v2_extracted.py`.
+Code and intermediate results: `LAB_attrib_p1/scripts/01…12_*.py`, `LAB_attrib_p1/out/`. BOS code was extracted verbatim from `bot_v2.py` using its AST (the module was not imported: it configures `logging.basicConfig` to write to the production `bot_errors.log`); the extracted file contains no secrets, and the source hash is recorded in the header of `scripts/bot_v2_extracted.py`.
 
-## 2. Отчёт о покрытии и дырах (по реальным timestamp)
+## 2. Coverage and gap report (actual timestamps)
 
-| Поток | Первая — последняя запись | N | Ожидаемая частота | Покрытие | Дубли | Дыр > порога | Крупнейшая дыра |
+| Stream | First — last record | N | Expected frequency | Coverage | Duplicates | Gaps above threshold | Largest gap |
 |---|---|---|---|---|---|---|---|
-| OI | 08‑28 21:05 → 10‑07 09:35 | 10 423 | 5 мин | **91,5%** слотов | 13 строк в слоте | 38 (>15 мин) | 9 ч 10 мин (23.09) |
-| funding/mark | 08‑29 11:28 → 10‑07 09:36 | 3 123 108 | ~1 с | **92,0%** секунд | 0 (по event_time_ms) | 99 (>60 с), 36 (>10 мин) | 8 ч 18 мин (до 21.09 07:52) |
-| gamma_agg | 08‑24 19:44 → 10‑07 09:30 | 6 525 | 10 мин | 82,1% (**91,6%** без известной дыры) | 1 373 слотов с 2+ строками | 67 (>15 мин) | **109 ч** (02.10 10:10 → 06.10 23:10) |
-| лог бота | 08‑21 19:34 → 10‑07 09:27 | 1 987 | ~30 мин | ~88,8% | 0 | 36 (>75 мин) | 12 ч 36 мин (23.09) |
-| ликвидации | 08‑29 11:41 → 10‑07 09:35 | 34 026 | событийный | **92,6%** времени валидно по маске | 0 | 170 окон простоя | см. §7 |
-| tape | 08‑28 21:27 → 10‑07 09:36 | 246 190 | событийный | см. §7 | 0 | 2 дыры >1 ч | 7 ч 53 мин (05.10) |
-| свечи 1d/4h/1h | — | 644/1136/2745 | — | 100% | 0 | 0 | — |
+| OI | 08‑28 21:05 → 10‑07 09:35 | 10 423 | 5 min | **91.5%** of slots | 13 rows within slots | 38 (>15 min) | 9 h 10 min (23.09) |
+| funding/mark | 08‑29 11:28 → 10‑07 09:36 | 3 123 108 | ~1 sec | **92.0%** of seconds | 0 (by event_time_ms) | 99 (>60 sec), 36 (>10 min) | 8 h 18 min (ending 21.09 07:52) |
+| gamma_agg | 08‑24 19:44 → 10‑07 09:30 | 6 525 | 10 min | 82.1% (**91.6%** excluding the known gap) | 1 373 slots with 2+ rows | 67 (>15 min) | **109 h** (02.10 10:10 → 06.10 23:10) |
+| bot log | 08‑21 19:34 → 10‑07 09:27 | 1 987 | ~30 min | ~88.8% | 0 | 36 (>75 min) | 12 h 36 min (23.09) |
+| liquidations | 08‑29 11:41 → 10‑07 09:35 | 34 026 | Event driven | **92.6%** of time valid under the mask | 0 | 170 outage windows | See §7 |
+| tape | 08‑28 21:27 → 10‑07 09:36 | 246 190 | Event driven | See §7 | 0 | 2 gaps >1 h | 7 h 53 min (05.10) |
+| 1d/4h/1h candles | — | 644/1136/2745 | — | 100% | 0 | 0 | — |
 
-Год везде 2026 (проверено `assert`). Замечено: часть строк с нулевыми микросекундами без дроби (`…+00:00`), из‑за чего наивный `pd.to_datetime` падает; использован `format="ISO8601"`.
+The year is 2026 throughout (verified by `assert`). Some timestamps with zero microseconds omit the fractional component (`…+00:00`), causing naive `pd.to_datetime` parsing to fail; `format="ISO8601"` was used.
 
-**Общие простои.** Все крупные окна funding ≥30 мин (топ‑25 в `out/common_outages.csv`) совпадают по времени с дырами OI, gamma и лога бота: 20–21.09 (8,3 ч), 12.09 (6,7 ч), 03.09 (4,7 ч), 16.09, 15.09, 19.09 и др. Это сбои машины/сети, а не отдельных сборщиков. **Сеть 12.09** разобрана отдельно: 01:54–08:38 UTC (6,7 ч) и ещё три окна позже в тот же день (10:01–11:23, 11:52–15:03, 15:03–16:43) — все потоки и бот.
+**Shared outages.** All major funding gaps ≥30 min (top‑25 in `out/common_outages.csv`) coincide with gaps in OI, gamma, and the bot log: 20–21.09 (8.3 h), 12.09 (6.7 h), 03.09 (4.7 h), 16.09, 15.09, 19.09, and others. These are machine/network failures, not individual collector failures. **The network outage on 12.09** was examined separately: 01:54–08:38 UTC (6.7 h), plus three later windows that day (10:01–11:23, 11:52–15:03, 15:03–16:43), affecting all streams and the bot.
 
-Неустранимые дыры не интерполировались.
+Unrecoverable gaps were not interpolated.
 
-## 3. Независимые эпизоды BOS (replay)
+## 3. Independent BOS episodes (replay)
 
-Replay воспроизводит то, что видел бы бот в каждый тик после закрытия бара, окно 499 закрытых + 1 формирующийся бар, `compute_impulse(closed_only=True)`, дословный код. **Сверка с боевым логом:** 1D 100,0%, 4H 98,9%, 1H 99,1%; 40 расхождений из 5 961 пар «тик×ТФ», все — в логе `NONE`, в replay `ACTIVE`/`ENDED`, все после 13.09 (§9, п.7).
+Replay reconstructs what the bot would have seen on every tick after a bar close, with a window of 499 closed bars + 1 forming bar, `compute_impulse(closed_only=True)`, and verbatim code. **Agreement with the production log:** 1D 100.0%, 4H 98.9%, 1H 99.1%; 40 discrepancies out of 5 961 tick×timeframe pairs, all `NONE` in the log versus `ACTIVE`/`ENDED` in replay, all after 13.09 (§9, item 7).
 
-| ТФ | Эпизодов, пересекающих окно | BULL / BEAR | Завершены | Активны сейчас | Цензурированы слева |
+| Timeframe | Episodes intersecting the window | BULL / BEAR | Ended | Currently active | Left censored |
 |---|---|---|---|---|---|
-| 1D | **2** | 2 / 0 | 1 (по пивоту) | 1 | 1 |
-| 4H | 6 | 4 / 2 | 6 (по пивоту) | 0 | 0 |
-| 1H | 17 | 8 / 9 | 16 (15 по пивоту, 1 по противоположному BOS) | 1 | 0 |
+| 1D | **2** | 2 / 0 | 1 (pivot break) | 1 | 1 |
+| 4H | 6 | 4 / 2 | 6 (pivot break) | 0 | 0 |
+| 1H | 17 | 8 / 9 | 16 (15 pivot breaks, 1 opposite BOS) | 1 | 0 |
 
-Эпизоды 1D: BULL с 2026‑08‑19 до 2026‑09‑15 (лево‑цензурирован, возраст 26 баров), BULL с 2026‑09‑18 по сегодня (18 баров, право‑цензурирован). Между ними 1D неактивен ~3 суток.
+1D episodes: BULL from 2026‑08‑19 to 2026‑09‑15 (left censored, age 26 bars), and BULL from 2026‑09‑18 to the report date (18 bars, right censored). Between them, 1D is inactive for ~3 days.
 
-## 4. Структурные переходы
+## 4. Structural transitions
 
-Состояние ТФ = ACTIVE‑направление или `NONE` (`ENDED` и `NONE` объединены: «нет активного импульса»).
+Timeframe state = ACTIVE direction or `NONE` (`ENDED` and `NONE` are combined as “no active impulse”).
 
-| Переход | 1D | 4H | 1H |
+| Transition | 1D | 4H | 1H |
 |---|---|---|---|
 | NONE→BULL | 1 | 3 | 8 |
 | NONE→BEAR | 0 | 2 | 7 |
 | BULL→NONE | 1 | 4 | 7 |
 | BEAR→NONE | 0 | 2 | 8 |
-| BULL→BEAR (противоп. BOS) | 0 | 0 | 1 |
+| BULL→BEAR (opposite BOS) | 0 | 0 | 1 |
 | BEAR→BULL | 0 | 0 | 0 |
 
-**Мульти‑ТФ.** На сетке закрытий 1H в окне 12 различных состояний, 44 сегмента, **43 перехода**; медиана длительности сегмента 18 ч. Наиболее частые (часов): `1D BULL/4H BULL/1H NONE` 178, `1D BULL/4H NONE/1H BEAR` 177, `1D BULL/4H BULL/1H BULL` 169, `1D BULL/4H NONE/1H NONE` 137. `1D NONE` лишь 72 ч суммарно. Таблица заходов — `out/multi_tf_segments.csv`.
+**Multiple timeframes.** On the 1H close grid, the window contains 12 distinct states, 44 segments, and **43 transitions**; median segment duration is 18 h. Most frequent states (hours): `1D BULL/4H BULL/1H NONE` 178, `1D BULL/4H NONE/1H BEAR` 177, `1D BULL/4H BULL/1H BULL` 169, `1D BULL/4H NONE/1H NONE` 137. `1D NONE` totals only 72 h. Segment entries are listed in `out/multi_tf_segments.csv`.
 
-**Цепочка из задания** `1D BULL / 4H NONE / 1H BEAR`: **7 заходов** (из `…4H NONE/1H NONE` — 5, из `…4H BULL/1H BEAR` — 2), медианная длительность 17 ч, макс 61 ч; заходы распределены по двум 1D‑режимам: **4** в первом BULL‑эпизоде (01.09, 07.09, 09.09, 15.09) и **3** во втором (24.09, 28.09, 07.10). То есть независимых кластеров 2, а не 7. `1D BULL/4H NONE/1H BEAR` против `1D BULL/4H BULL/1H BEAR`: второе состояние встречается лишь 3 раза, медиана 3 ч.
+**The requested sequence** `1D BULL / 4H NONE / 1H BEAR`: **7 entries** (5 from `…4H NONE/1H NONE`, 2 from `…4H BULL/1H BEAR`), median duration 17 h, maximum 61 h; entries span two 1D regimes: **4** in the first BULL episode (01.09, 07.09, 09.09, 15.09) and **3** in the second (24.09, 28.09, 07.10). Thus there are 2 independent clusters, not 7. Comparing `1D BULL/4H NONE/1H BEAR` with `1D BULL/4H BULL/1H BEAR`, the latter state appears only 3 times, with a median duration of 3 h.
 
-## 5. Единица наблюдения
+## 5. Observation unit
 
-- **A. Эпизод BOS.** Ключ `(tf, direction, start_bar_open)`. Момент решения `T` = закрытие бара BOS (первый тик с `ACTIVE`). Конец — закрытие бара, когда сработал пивот‑слом или противоположный BOS. Не завершённые эпизоды помечаются как право‑цензурированные (`ended_observed=False`).
-- **B. Структурный переход.** Смена вектора `(1D, 4H, 1H)` на сетке закрытий 1H; `T` = закрытие 1H‑бара, в котором вектор изменился.
-- **Кластер для неопределённости:** 1D‑эпизод (режим) как верхний уровень; 4H‑ и 1H‑эпизоды вложены. Тики по 30 минут независимыми не считаются.
-- Строки лога бота как единица не используются.
+- **A. BOS episode.** Key `(tf, direction, start_bar_open)`. Decision time `T` = BOS bar close (first tick with `ACTIVE`). End = the close of the bar triggering a pivot break or opposite BOS. Unfinished episodes are marked as right censored (`ended_observed=False`).
+- **B. Structural transition.** Change in the vector `(1D, 4H, 1H)` on the 1H close grid; `T` = close of the 1H bar where the vector changed.
+- **Cluster for uncertainty:** the 1D episode (regime) is the top level; 4H and 1H episodes are nested. Ticks spaced 30 minutes apart are not considered independent.
+- Bot log rows are not used as observation units.
 
-## 6. Предлагаемая причинная схема join
+## 6. Proposed causal join design
 
-Для события в момент `T` (закрытие бара) признак берётся только из записей с `timestamp ≤ T`; ближайшее будущее значение не используется; устаревшее значение → `MISSING`, а не forward‑fill.
+For an event at `T` (bar close), features use only records with `timestamp ≤ T`; the nearest future value is never used; a stale value becomes `MISSING`, rather than being forward-filled.
 
-| Слой | Время записи | Правило свежести | Дополнительное условие валидности |
+| Layer | Record time | Freshness rule | Additional validity condition |
 |---|---|---|---|
-| OI | `recv_ts_utc` | ≤ 15 мин | слот не в дыре |
-| funding | `recv_ts_utc` | ≤ 60 с | — |
-| gamma | `snapshot_ts_utc` (слот 10 мин, дедуп по слоту) | ≤ 20 мин | только сегмент до 2026‑10‑02 10:10; сегмент после 10‑06 23:10 пока слишком короток |
-| ликвидации | `recv_ts_utc` (задержка к `event_time_ms` медиана 0,07 с) | событие при валидном окне | маска валидности (§7); для окна признака `[T‑24ч,T]` покрытие маски ≥ 90% |
-| tape | `timestamp_ms` сделки | сделка с `trade_time ≤ T` | вне окна исключения ±24 ч (§7) |
+| OI | `recv_ts_utc` | ≤ 15 min | Slot is not in a gap |
+| funding | `recv_ts_utc` | ≤ 60 sec | — |
+| gamma | `snapshot_ts_utc` (10 min slot, deduplicated by slot) | ≤ 20 min | Only the segment before 2026‑10‑02 10:10; the segment after 10‑06 23:10 is still too short |
+| liquidations | `recv_ts_utc` (median delay from `event_time_ms`: 0.07 sec) | Event within a valid window | Validity mask (§7); for feature window `[T‑24h,T]`, mask coverage ≥ 90% |
+| tape | Trade `timestamp_ms` | Trade with `trade_time ≤ T` | Outside the exclusion window ±24 h (§7) |
 
-Признаки направленно нормализуются: `s = +1` для BULL, `−1` для BEAR; BULL и BEAR всегда показываются отдельно и затем объединённо. Нормализация gamma на состав цепочки (экспирации меняют `n`: 430→376) допускается без модели знакового GEX.
+Features are direction normalized: `s = +1` for BULL, `−1` for BEAR; BULL and BEAR are always reported separately before pooling. Gamma normalization for chain composition (expirations change `n`: 430→376) is allowed without a signed GEX model.
 
-**Исходы (определены заранее).** `P(T)` — закрытие бара BOS (исполнение и издержки не моделируются). Для `h ∈ {1,4,12,24}` ч (и 48, 72 при достаточной выборке): `R_h = s·(P(T+h)/P(T) − 1)`; MFE/MAE — по high/low 1H‑баров в `(T, T+h]`, направленно нормализованные; continuation = `R_h > 0`, reversal = `R_h < 0`, `R_h = 0` — в оба класса не входит и считается отдельно; время до следующего перехода — кривая Каплана–Мейера с правой цензурой на 2026‑10‑07. `level_lost_5d` — **определение не найдено в файлах** (§9, п.1).
+**Outcomes (specified in advance).** `P(T)` is the BOS bar close (execution and costs are not modeled). For `h ∈ {1,4,12,24}` hours (and 48, 72 with a sufficient sample): `R_h = s·(P(T+h)/P(T) − 1)`; MFE/MAE use highs/lows of 1H bars in `(T, T+h]`, direction normalized; continuation = `R_h > 0`, reversal = `R_h < 0`, and `R_h = 0` belongs to neither class and is counted separately; time to the next transition uses a Kaplan–Meier curve with right censoring at 2026‑10‑07. `level_lost_5d`: **no definition found in the files** (§9, item 1).
 
-## 7. Исключённые периоды и маски
+## 7. Excluded periods and masks
 
-| Что | Период / правило | Почему |
+| Item | Period / rule | Reason |
 |---|---|---|
-| gamma | 2026‑10‑02 10:10 → 2026‑10‑06 23:10 | известная неустранимая дыра (маршрут Deribit через VPN); пост‑сегмент короче суток |
-| ликвидации до запуска | всё до 2026‑08‑29 11:28:12 | первая сессия (с 28.08) подключалась к `/ws/btcusdt@forceOrder`, 15 ч `events=0`, при этом heartbeat писал «тишина в потоке — соединение живо»; с 29.08 14:28 МСК endpoint `/market/ws/…` |
-| ликвидации: простои | 170 окон, 68,9 ч (7,4% времени): от ошибки соединения до `Подключено.` ∪ пропуск heartbeat >15 мин | порог 15 мин выбран по распределению (99,5% интервалов ≤12,4 мин), устойчив при 10–30 мин; **приёмка:** внутри невалидных окон лишь 74 из 34 026 событий (0,22%); 63,3 из 67,4 ч окон ≥10 мин совпадают с дырами funding |
-| tape: подтверждённые дыры | 05.10 03:22–10:17 и 14:44–22:37 | паузы 7–8 ч при максимуме 59 мин в остальное время |
-| tape: консервативное исключение | **2026‑10‑02 00:00 → 2026‑10‑06 23:05** (+24 ч к окну признака) | лаг записи вырос до 17–24 ч, API Deribit, по проверке одного эндпоинта, не отдаёт историю старше примерно суток (срок точно не измерялся); 10‑06 23:05 — пакетная дозапись +166 строк |
-| бот/replay во время простоев | не исключаются | BOS строится по свечам Binance и не зависит от простоев машины, но деривативные признаки в эти часы `MISSING` |
+| gamma | 2026‑10‑02 10:10 → 2026‑10‑06 23:10 | Known unrecoverable gap (Deribit routing through VPN); the post-gap segment is shorter than a day |
+| liquidations before launch | Everything before 2026‑08‑29 11:28:12 | The first session (from 28.08) connected to `/ws/btcusdt@forceOrder`, with 15 h of `events=0` while heartbeat reported “quiet stream — connection alive”; from 29.08 14:28 Moscow time, endpoint `/market/ws/…` |
+| liquidations: outages | 170 windows, 68.9 h (7.4% of time): from a connection error until the connected message ∪ heartbeat gap >15 min | The 15 min threshold was chosen from the distribution (99.5% of intervals ≤12.4 min), robust over 10–30 min; **acceptance check:** only 74 of 34 026 events (0.22%) lie inside invalid windows; 63.3 of 67.4 h of windows ≥10 min overlap funding gaps |
+| tape: confirmed gaps | 05.10 03:22–10:17 and 14:44–22:37 | Pauses of 7–8 h versus a maximum of 59 min elsewhere |
+| tape: conservative exclusion | **2026‑10‑02 00:00 → 2026‑10‑06 23:05** (+24 h for the feature window) | Write lag rose to 17–24 h; checking one Deribit API endpoint suggested it did not return history older than roughly a day (exact retention was not measured); 10‑06 23:05 was a batch backfill of +166 rows |
+| bot/replay during outages | Not excluded | BOS is reconstructed from Binance candles and is independent of machine downtime, but derivatives features during those hours are `MISSING` |
 
-**Поправка к моему прошлому сообщению:** я писал, что 3–5 октября сделок «втрое меньше нормы». 3–4 октября — суббота и воскресенье; в чистые выходные (29–30.08, 05–06.09, 12–13.09, 19–20.09, 26–27.09) число сделок 2 123–4 699 в сутки, 3 и 4 октября дали 2 187 и 2 242 — внутри этого диапазона. Достоверно потеряны только два окна 5 октября. Правило «час ниже минимума всех чистых недель для ячейки день×час» пометило 53 часа за 2–6.10 при ожидаемых по случайности ~20 (грубая оценка 1/(n+1) на час), то есть деградация есть, но по часам не локализуется. Исключение 2.10–6.10 — осознанно консервативное.
+**Correction to my earlier message:** I wrote that October 3–5 had “three times fewer trades than normal.” October 3–4 were Saturday and Sunday; clean weekends (29–30.08, 05–06.09, 12–13.09, 19–20.09, 26–27.09) had 2 123–4 699 trades per day, while October 3 and 4 had 2 187 and 2 242, within that range. Only the two October 5 windows are confirmed losses. The rule “hourly count below the minimum across all clean weeks for the day×hour cell” flagged 53 hours over 2–6.10, versus ~20 expected by chance (rough estimate 1/(n+1) per hour). This indicates degradation but cannot locate it hour by hour. The 2.10–6.10 exclusion is deliberately conservative.
 
-## 8. Пример синхронного графика
+## 8. Synchronized chart example
 
 ![](out/timeline_example.png)
 
-**Правило выбора (задано до просмотра):** самое раннее событие входа в `1D BULL / 4H NONE / 1H BEAR`, у которого доступны все пять слоёв по `out/event_availability.csv` — **2026‑09‑01 18:00 UTC**. Это один пример без доказательной силы.
-Что на нём видно (наблюдение, не вывод): в час *до* момента события ликвидации лонгов 0,73 млн USD (46 событий), в час *после* — 15,45 млн USD (216 событий), то есть всплеск следует за BOS, а не предшествует ему. Панель gamma — иллюстрация (страйк максимума `|gamma_exposure_per_1pct_move|` выше/ниже spot), не определение признака.
+**Selection rule (specified before inspection):** the earliest entry into `1D BULL / 4H NONE / 1H BEAR` with all five layers available according to `out/event_availability.csv`: **2026‑09‑01 18:00 UTC**. This is one illustration, without evidential weight.
+What it shows (observation, not a conclusion): long liquidations in the hour *before* the event total 0.73 million USD (46 events), versus 15.45 million USD (216 events) in the hour *after*. The spike therefore follows BOS rather than preceding it. The gamma panel is an illustration (the strike with maximum `|gamma_exposure_per_1pct_move|` above/below spot), not a feature definition.
 
-## 9. Методологические и данные‑проблемы
+## 9. Methodological and data issues
 
-1. **`level_lost_5d` не определён в файлах.** В HANDOFF §4.2 и `Claude outputs/` есть только формулировка «удержан ли уровень к 5‑му дню (38% против 94%)» без точного уровня (уровень BOS? уровень слома?), без правила (закрытие на 5‑й день или любое закрытие за 5 дней) и без кода. Я его **не переопределял и не считал**. Нужен точный источник/определение от владельца.
-2. **Heartbeat «соединение живо» не доказывает доставку событий** (случай 28–29.08, см. §7). Для ликвидаций нужна маска по ошибкам + интервалам heartbeat + самим событиям.
-3. **Heartbeat не ровно 5 мин:** 8 606 интервалов ≤10 мин, 26 интервалов >30 мин. Первая версия маски с порогом 7 мин ошибочно считала простоем 36% времени (31% событий попало в «невалидные» окна). Исправлено, приёмочный тест описан в §7; v1‑файлы переименованы `_SUPERSEDED_v1_*`.
-4. **Два экземпляра gamma** с 12.09 по 06.10 писали в одни файлы: 1 373 слота с дублями, при анализе — дедуп по слоту. Расхождение значений внутри дублей не сравнивалось.
-5. **Общая причина простоев** машины/сети; вся статистика покрытия коррелирована, потоки не независимы.
-6. **Tape:** `trade_id` не монотонен по времени сделок (глобальный счётчик Deribit, пакетная дозапись) — не использовать как порядок. Надёжность tape до 02.10 проверена только правилом «день×час» и по крупным дырам; дни с большим числом предупреждений в логе (12.09, 15.09, 19–24.09) отдельно не разбирались.
-7. **Лог бота ненадёжен как запись структуры:** в 40 тиках `NONE`, а replay показывает `ACTIVE`/`ENDED`. Причина **не проверена**; гипотеза — неполный ответ API (код возвращает пустой DataFrame без записи в лог). Replay принят как основной источник.
-8. **BOS не «чистая структура»:** `_detect_swings` фильтрует свинги по EMA50, ATR и объёму (`High−EMA50 > 0.7·ATR`, `Volume > 1.05·MA20`). Определения не менялись; игнорирование объёма относится только к остальным слоям бота.
-9. **Режим цены:** 5–6 недель, эпизоды 1D только BULL; результат не переносится на BEAR/другие режимы.
-10. **Gamma‑объём:** сырой файл 2,5 млн строк; концентрации зависят от недельных экспираций (число инструментов 430→376) — нормировка нужна до использования.
-11. **Грубая оценка времени до N=10 кластеров** (Пуассон по наблюдаемой частоте, зависит от режима): при кластеризации по 1D — порядка 200–400 суток; по 4H (6 за ~39 дней) — ещё ~4 недели; по 1H кластеров 17, но все вложены в 2–3 режима 1D. Выбор уровня кластеризации — решение владельца.
-12. **Что можно сделать независимо от деривативов:** BOS‑baseline (§4 ТЗ) на длинной истории свечей Binance (4,5 года, 72 дневных BOS по HANDOFF) — ответит на «что BOS сам говорит», но не на вопрос про деривативы.
-13. **Безопасность (P0):** в `bot_v2.py` и в `bot_errors.log` (уровень DEBUG пишет полный URL Telegram) лежат токен бота; в `bot_v2.py` лежат также ключи Binance API. Значения в отчёт не включены. Отдельная рекомендация: `../SECURITY_RECOMMENDATION_secrets_in_logs.md`. С кодом исследования это не смешивалось.
+1. **`level_lost_5d` is undefined in the files.** HANDOFF §4.2 and `Claude outputs/` contain only “whether the level held by day 5 (38% versus 94%)”, without specifying the level (BOS level? break level?), the rule (close on day 5 or any close during 5 days), or code. I **neither redefined nor calculated it**. The owner must provide an exact source/definition.
+2. **A “connection alive” heartbeat does not prove event delivery** (28–29.08 case, §7). Liquidations require a mask based on errors, heartbeat intervals, and the events themselves.
+3. **Heartbeat is not exactly every 5 min:** 8 606 intervals ≤10 min, 26 intervals >30 min. The first mask version, with a 7 min threshold, incorrectly classified 36% of time as downtime (31% of events fell into “invalid” windows). Corrected; the acceptance check is described in §7; v1 files were renamed `_SUPERSEDED_v1_*`.
+4. **Two gamma instances** wrote to the same files from 12.09 to 06.10: 1 373 duplicate slots; analysis deduplicates by slot. Differences in values within duplicates were not compared.
+5. **Shared machine/network cause of outages:** all coverage statistics are correlated; the streams are not independent.
+6. **Tape:** `trade_id` is not monotonic in trade time (global Deribit counter, batch backfills); do not use it to order trades. Tape reliability before 02.10 was checked only with the day×hour rule and major gaps; days with many log warnings (12.09, 15.09, 19–24.09) were not examined separately.
+7. **The bot log is unreliable as a structural record:** 40 ticks show `NONE` while replay shows `ACTIVE`/`ENDED`. The cause is **unverified**; one hypothesis is an incomplete API response (the code returns an empty DataFrame without logging). Replay was adopted as the primary source.
+8. **BOS is not “pure structure”:** `_detect_swings` filters swings using EMA50, ATR, and volume (`High−EMA50 > 0.7·ATR`, `Volume > 1.05·MA20`). Definitions were not changed; ignoring volume applies only to the bot's other layers.
+9. **Price regime:** 5–6 weeks, with only BULL episodes on 1D; findings cannot be generalized to BEAR/other regimes.
+10. **Gamma size:** the raw file has 2.5 million rows; concentrations depend on weekly expirations (instrument count 430→376), requiring normalization before use.
+11. **Rough time estimate to N=10 clusters** (Poisson estimate from observed frequency, regime dependent): around 200–400 days when clustering by 1D; ~4 additional weeks for 4H (6 over ~39 days); 17 1H clusters already exist, but all are nested within 2–3 1D regimes. The clustering level is an owner decision.
+12. **Work possible independently of derivatives:** a BOS baseline (§4 of the specification) over long Binance candle history (4.5 years, 72 daily BOS events according to HANDOFF) would answer “what does BOS itself tell us?”, but not the derivatives question.
+13. **Security (P0):** `bot_v2.py` and `bot_errors.log` (DEBUG logs the full Telegram URL) contain a bot token; `bot_v2.py` also contains Binance API keys. Values are not included in this report. Separate recommendation: `../SECURITY_RECOMMENDATION_secrets_in_logs.md`. This was kept separate from the research code.
 
-## 10. Следующий минимальный шаг и решение, которое он даст
+## 10. Next minimal step and the decision it enables
 
-| Решение владельца | Что получим |
+| Owner decision | Result |
 |---|---|
-| Дать точное определение `level_lost_5d` | можно закончить BOS‑baseline по §4 ТЗ |
-| Выбрать уровень кластеризации (1D строго / 4H как рабочий компромисс) | определит, когда фаза 2 станет статистически осмысленной |
-| Подтвердить маски §7 (в частности исключение tape 02–06.10) | заморозим правила валидности до фазы 2 |
-| Решить, закрывать ли дыры OI бэкфиллом за 30 дней | OI‑покрытие вырастет с 91,5% до ~100%, но другой источник (`sum_open_interest`), потребуется сверка |
+| Provide an exact definition of `level_lost_5d` | Enables completion of the BOS baseline under §4 of the specification |
+| Choose the clustering level (strict 1D / 4H as a working compromise) | Determines when Phase 2 becomes statistically meaningful |
+| Approve the §7 masks (especially the tape exclusion 02–06.10) | Freezes validity rules before Phase 2 |
+| Decide whether to fill OI gaps with the 30-day backfill | OI coverage would rise from 91.5% to ~100%, but this is another source (`sum_open_interest`) and requires reconciliation |
 
-Фаза 2 не начата. Жду ревью.
+Phase 2 has not started. Awaiting review.
