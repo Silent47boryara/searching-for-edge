@@ -1,11 +1,11 @@
-# Интерактивная карта рыночных потоков BTC
+# Interactive BTC market-flow map
 
-Откройте `market_map.html` в браузере. Файл автономный: Chart.js 4.5.1 и1093 часовых наблюдения встроены, внешних запросовнет. Данные29.08–14.10.2026 00:00UTC; исторический срез, не live.
+Open `market_map.html` in a browser. The file is self-contained: Chart.js 4.5.1 and 1093 hourly observations are embedded; no external requests are made. Data cover 29.08–14.10.2026 00:00 UTC. This is a historical snapshot, not a live feed.
 
-Выбор дат/готовых периодов; синхронный курсор6графиков; клик закрепляетмомент; ползунок и строки таблицы выбираютчас; Москва/UTC; tape все/безblock-combo-RFQ; фильтр4режимовprice/OI; экспортCSV. Пропуски линий/«нетданных» сохраняют missing. В карту включены только данные,известные кT, без будущихисходов. Крупные ленты вHTMLне помещены.
+Features: date selection and preset periods; a synchronised cursor across 6 charts; click to lock a time; a slider and table rows to select an hour; Moscow/UTC time; all tape trades or tape excluding block/combo/RFQ; a filter for the 4 price/OI regimes; CSV export. Gaps and “no data” preserve missing values. The map uses only information available at T, without future outcomes. Large raw feeds are not embedded in the HTML.
 
-Источник: ../collectors_2026-10-14/hourly_features.csv. Генерация: build.py (Python3.9 сpandas) изtemplate.html илокальнойбиблиотекиchart.umd.min.js. Результаты исследования: ../collectors_2026-10-14/RESULT.md.
+Source: ../collectors_2026-10-14/hourly_features.csv. Generation: build.py (Python 3.9 with pandas), using template.html and the local chart.umd.min.js library. Research results: ../collectors_2026-10-14/RESULT.md.
 
-Проверено вбраузере: полныйпериод1093часа, переключениеtape, готовыйпериод, выбор08.10 19:00МСК (price−1.77%, OI−2.38%,liq$51.43M,95%long),ошибокconsoleнет. preview.png — screenshot.
+The original interface was checked in a browser: full period of 1093 hours, tape switching, a preset period, selection of 08.10 19:00 Moscow time (price −1.77%, OI −2.38%, liquidations $51.43M, 95% long), and no console errors. preview.png records that original interface; the English translation changes labels only.
 
-Локальныйпредпросмотр вCodex: http://127.0.0.1:8766/market_map.html,серверслушаеттолько127.0.0.1. Автономномуфайлуэтотсерверненужен. Production и сборщикинеизменены.
+Original local Codex preview: http://127.0.0.1:8766/market_map.html, listening only on 127.0.0.1. The self-contained file does not require that server. Production and collectors were not changed.

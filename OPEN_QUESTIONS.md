@@ -1,22 +1,22 @@
-# Открытые вопросы
+# Open questions
 
-Это направления проверки, а не найденные стратегии. Правила новой проверки нужно зафиксировать до просмотра её исходов. Данные до лабораторного среза уже использовались для discovery; последующие данные нельзя автоматически считать независимым подтверждением, если по ним менялись правила.
+These are research directions, not discovered strategies. Rules for a new test must be fixed before inspecting its outcomes. Data up to the laboratory cutoff have already been used for discovery; subsequent data cannot automatically be called independent confirmation if the rules were adjusted after inspecting them.
 
-| Вопрос | Почему остаётся интересным | Что нужно для ответа |
+| Question | Why it remains interesting | What is needed |
 |---|---|---|
-| Различает ли OI + сторона ликвидаций восстановление и продолжение после похожего падения? | Измеряются разные процессы; слабый положительный прогнозный результат пары | Заранее заданные режимы и исход, контроль прошлой цены/волатильности, новые события, учёт исправности потоков |
-| Несёт ли состав опционных сделок информацию о будущем риске? | Gamma+tape дали положительную, но зависимую от block/combo/RFQ цифру | Разделить обычные и структурные сделки; соблюдать exchange и recv time; новые данные без перебора удачного состава |
-| Воспроизводятся ли старые tape/BOS и gamma/переходы? | Малый lag-fix их сохранил | Замороженные определения, исходная спецификация событий, отдельная новая выборка, поправка на семейство проверок |
-| Полезна ли карта состояния для решения? | Текущие ликвидации и активность tape содержательно измеряют стресс | Выбрать конкретное решение и loss-функцию; сравнить с доступной в тот же момент ценой, без будущих подсказок |
-| Какой контракт должен иметь BOS? | Интерфейс смешивает активность, завершённый импульс, уровень отмены и торговый ярлык | Отдельно согласовать действующий break, закрытость свечей, DATA_UNAVAILABLE и время доступности; после этого адресный replay |
+| Can OI + liquidation side distinguish recovery from continuation after a similar decline? | Different processes are measured; a weak positive predictive result for the pair | Predefined regimes and outcome, controls for past price/volatility, new events, and feed-health checks |
+| Does option-trade composition contain information about future risk? | Gamma+tape produced a positive result that depended on block/combo/RFQ trades | Separate ordinary from structured trades; respect exchange and receive times; new data without selecting a favourable composition |
+| Do the old tape/BOS and gamma/transition relationships replicate? | The small lag fix preserved them | Frozen definitions, the original event specification, a separate new sample, and correction for the test family |
+| Does the state map help a decision? | Current liquidations and tape activity measure stress in a meaningful way | Choose a specific decision and loss function; compare against contemporaneously available price, without future information |
+| What should the BOS contract be? | The interface mixes active states, completed impulses, invalidation levels, and trading labels | Specify the operative break, closed-candle rules, DATA_UNAVAILABLE, and availability time separately, then run a targeted replay |
 
-## Что не решено
+## What remains unresolved
 
-- Исправленный исследовательский кандидат не внедрён в production.
-- Полный независимый аудит другим исследователем не проведён.
-- Многолетний дневной replay ограничен консервативной подвыборкой 794 баров.
-- Исполнимая стратегия с издержками и slippage не доказана.
-- Нет основания утверждать, что все применения BOS или деривативных данных бесполезны.
-- Нет основания продолжать произвольный подбор фильтров ради положительной цифры.
+- The corrected research candidate has not been deployed to production.
+- No complete independent audit by another researcher has been conducted.
+- The multiyear daily replay is limited to a conservative subsample of 794 bars.
+- An executable strategy after costs and slippage has not been established.
+- There is no basis for claiming that all uses of BOS or derivatives data are useless.
+- There is no basis for continuing arbitrary filter searches to obtain a positive number.
 
-Практический приоритет: надёжный непрерывный сбор, корректная интерпретация измеряемых величин и небольшое число заранее определённых вопросов. Операционные проверки после сна Mac не являются новой валидацией исследовательских гипотез.
+Practical priorities: reliable continuous collection, correct interpretation of measured quantities, and a small number of predefined questions. Operational checks after the Mac wakes from sleep are not new validation of research hypotheses.

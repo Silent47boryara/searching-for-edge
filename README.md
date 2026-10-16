@@ -1,21 +1,25 @@
-# BOS: исследовательские результаты
+# BOS: research results
 
-Срез исследований: 13–14 октября 2026. Пакет подготовлен 16 октября 2026.
+Research snapshot: 13–14 October 2026. Package prepared on 16 October 2026.
 
-Это архив диагностических лабораторий, а не торговая стратегия или production-релиз.
+This is an archive of diagnostic laboratories, not a trading strategy or a production release.
 
-- [Общий итог](RESEARCH_SUMMARY.md)
-- [Открытые вопросы](OPEN_QUESTIONS.md)
-- [Аудит реализации](audit_2026-10-13/REPORT.md)
-- [Качество BOS и replay исправлений](quality_2026-10-13/RESULT.md)
-- [Литература](quality_2026-10-13/LITERATURE.md)
-- [Сборщики отдельно и совместно](collectors_2026-10-14/RESULT.md)
-- [Интерактивная карта](dashboard/README.md)
+- [Research summary](RESEARCH_SUMMARY.md)
+- [Open questions](OPEN_QUESTIONS.md)
+- [Implementation audit](audit_2026-10-13/REPORT.md)
+- [BOS quality and replay of corrections](quality_2026-10-13/RESULT.md)
+- [Literature](quality_2026-10-13/LITERATURE.md)
+- [Collectors individually and in combination](collectors_2026-10-14/RESULT.md)
+- [Interactive market map](dashboard/README.md)
 
-## Воспроизводимость и границы
+## Reproducibility and scope
 
-В папках сохранены протоколы, скрипты, расчётные таблицы, проверки и manifest с хешами. Скрипты используют внешние локальные исходники bot_project_v2 и прежней LAB_attrib_p1; этих исходников в пакете нет. Поэтому архив позволяет проверить сохранённые результаты, но не обещает полный повтор расчётов в чистом клоне. Абсолютные пути в скриптах и manifest — исторические пути исследования, их потребуется настроить на другой машине. Manifest описывает исходные лаборатории и не является хешем всего этого коммита.
+The folders contain protocols, scripts, calculated tables, checks, and manifests with hashes. The scripts depend on external local sources in bot_project_v2 and the earlier LAB_attrib_p1; those sources are not included. The archive therefore supports inspection of the saved results, but does not promise a complete rerun from a clean clone. Absolute paths in scripts and manifests are historical research paths and require configuration on another machine. Each manifest describes its source laboratory; it is not a hash of this entire commit.
 
-Крупные производные replay-таблицы и минутная цена включены для проверки результатов. Боевой bot_v2.py, сырые потоки, секреты и runtime-логи бота не включены. candidate_core.py и candidate_helpers.py — изолированные исследовательские модули, не замена production-бота. Исправления не внедрены.
+Large derived replay tables and minute prices are included for verification. The production bot_v2.py, raw feeds, secrets, and the bot's runtime logs are excluded. candidate_core.py and candidate_helpers.py are isolated research modules, not replacements for the production bot. The corrections have not been deployed.
 
-Длинная история уже изучалась ранее; хронологические проверки не являются новым независимым holdout. Отсутствие значимого улучшения не доказывает отсутствия любого возможного эффекта.
+The long history had already been examined. Chronological checks are not a new independent holdout. A failure to find significant improvement does not establish the absence of every possible effect.
+
+## Language and source integrity
+
+The research reports, summaries, and interactive map are available in English. Verbatim bot messages in the archived peak CSVs, exact extracted source modules, and historical diagnostic transcripts retain their original wording. These are evidence artifacts, not untranslated research conclusions. Translation does not change the numerical data, model definitions, or findings. Existing source/output hashes describe the original research artifacts; they are not checksums of the translated documents or interface.

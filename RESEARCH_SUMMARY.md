@@ -1,41 +1,41 @@
-# Итоги BOS и лабораторий сборщиков
+# Findings from BOS and the collector laboratories
 
-Подготовлено 16.10.2026 по завершённым исследованиям 13–14.10. Новых расчётов в этом документе нет.
+Prepared on 16.10.2026 from the completed studies of 13–14.10. This document contains no new calculations.
 
-## Основной вывод
+## Main conclusion
 
-Ошибки реализации BOS существуют, но точечное исправление не объясняет и не устраняет отрицательные результаты. Младшие слои связаны с уже произошедшим движением, однако надёжное прогнозное преимущество не установлено. Деривативные потоки описывают измеряемые рыночные процессы; устойчивое улучшение прогноза сверх цены и волатильности пока не найдено.
+BOS implementation errors exist, but a targeted correction neither explains nor eliminates the negative results. The lower timeframes are associated with movement that has already occurred; a reliable predictive edge has not been established. Derivatives feeds describe measurable market processes; a stable forecasting improvement beyond price and volatility has not been found.
 
-## Почему возникла ставка на BOS
+## Why BOS seemed promising
 
-Из документов проекта следует исходная цель обнаружения крупных движений и наблюдения их развития. Повторная ретроспективная разметка дала 93,5% охвата 138 доступных завершённых часовых 8%-волн и медианный лаг 35 часов среди пойманных волн. Это содержательный результат об охвате, но не точность всех сигналов, не ранний вход и не прибыль. Состояние может присутствовать почти в каждой большой волне и одновременно часто показываться без полезного продолжения.
+The project documents record an initial aim of detecting large movements and monitoring their development. A retrospective relabelling found 93.5% coverage of 138 available completed hourly 8% waves, with a median lag of 35 hours among detected waves. This is a meaningful coverage result, but it is not accuracy across all signals, an early entry, or profit. A state can appear in almost every large wave while also appearing frequently without useful continuation.
 
-## Что установлено
+## What was established
 
-| Вопрос | Результат | Граница вывода |
+| Question | Result | Limit of the conclusion |
 |---|---|---|
-| Корректен ли код? | Есть расхождения показанного и действующего break, ENDED-сводки, закрытости свечей, NONE при ошибках данных и границы подтверждения swing | Ошибки интерфейса и изменение спецификации выхода нельзя смешивать |
-| Спасает ли исправление лага BOS? | Меняется 0,62% часовых состояний на длинной истории; descriptive balanced accuracy 52,45% → 52,41% | Это оценка соответствия прошлому 12-барному неттоходу, не win rate |
-| BOS — чистая случайность? | 1H/4H descriptive score выше случайных циклических сдвигов состояний | Связь с прошлым движением не прогноз будущего |
-| Помогает ли более жёсткий выход? | Улучшает отдельные описательные показатели, но существенно меняет модель и ослабляет старые gamma/tape-зацепки | Это новая спецификация, не простой багфикс |
-| Что дают сборщики без BOS? | Ликвидации связаны с текущей волатильностью: Spearman 0,82; активность tape: 0,76 | Одновременная связь не раннее предупреждение |
-| Улучшают ли они следующие 4h? | Ни одно из 24 основных сравнений незначимо; после Holm все p=1 | Маленькая выборка, широкие интервалы; не доказательство нулевого эффекта |
+| Is the code correct? | Discrepancies involve displayed versus operative break levels, ENDED summaries, closed candles, NONE on data errors, and the swing-confirmation boundary | Interface errors must be distinguished from changes to the exit specification |
+| Does correcting the BOS lag rescue it? | 0.62% of hourly states change over the long history; descriptive balanced accuracy 52.45% → 52.41% | Agreement with the past 12-bar net move, not a win rate |
+| Is BOS pure randomness? | The 1H/4H descriptive score exceeds random circular shifts of the state sequence | Association with past movement does not forecast the future |
+| Does a stricter exit help? | Some descriptive metrics improve, but the model changes substantially and the old gamma/tape leads weaken | A new specification, not a simple bug fix |
+| What do collectors provide without BOS? | Liquidations correlate with current volatility: Spearman 0.82; tape activity: 0.76 | A contemporaneous relationship is not an early warning |
+| Do they improve the next 4h forecast? | None of the 24 primary comparisons is significant; all Holm-adjusted p-values are 1 | Small sample and wide intervals; not proof of a zero effect |
 
-Простая EMA20±0.5ATR лучше BOS совпадала с выбранной описательной меткой (1H: 74,70% против 52,45%). Она ближе по конструкции к самой метке; это не доказательство прибыльности EMA и не готовая замена.
+A simple EMA20±0.5ATR agreed better with the chosen descriptive label than BOS (1H: 74.70% versus 52.45%). Its construction is closer to the label itself; this is neither evidence of EMA profitability nor a ready replacement.
 
-## Интересные, но неподтверждённые результаты
+## Interesting but unconfirmed results
 
-- **OI + ликвидации:** уменьшение MSE будущей 4h доходности на 1,8% относительно цены; интервал около [−5,3%; +6,8%], улучшение в 2 из 5 недель. Содержательная задача — различать сокращение контрактов и рост OI при сопоставимом движении цены.
-- **Gamma + tape:** уменьшение MSE будущей 4h волатильности на 9,8%; интервал [−9,0%; +24,7%], 53 наблюдения / 14 суток / 3 блока. Без block/combo/RFQ — −1,2%. Эффект неустойчив к составу ленты.
-- **Tape перед стартом 1H BOS:** N=14, rho с MAE24 +0,618; после исправления лага не меняется. Старый кандидат не выдержал поправку на множественные проверки.
-- **Gamma на переходах слоёв:** N=36, rho −0,580; после исправления лага N=35, rho −0,562. Кандидат найден после просмотра множества тестов и требует новых данных.
+- **OI + liquidations:** a 1.8% reduction in MSE for future 4h returns relative to price; interval approximately [−5.3%; +6.8%], with improvement in 2 of 5 weeks. The substantive question is whether shrinking contract counts and growing OI distinguish outcomes after comparable price movements.
+- **Gamma + tape:** a 9.8% reduction in MSE for future 4h volatility; interval [−9.0%; +24.7%], 53 observations / 14 days / 3 blocks. Excluding block/combo/RFQ trades: −1.2%. The effect is sensitive to tape composition.
+- **Tape before 1H BOS starts:** N=14, rho with MAE24 +0.618; unchanged after the lag correction. The old candidate did not survive multiple-testing correction.
+- **Gamma at timeframe transitions:** N=36, rho −0.580; after the lag correction N=35, rho −0.562. Selected after examining many tests; requires new data.
 
-MSE-улучшения не являются доходностью. Корреляции с MAE не являются торговым правилом. У наборов моделей разные доступные строки; абсолютный рейтинг между ними ограничен.
+MSE improvements are not returns. MAE correlations are not trading rules. Model sets have different available observations, limiting absolute comparisons between them.
 
-## Что остаётся полезным
+## What remains useful
 
-Цена + изменение OI + сторона ликвидаций + funding + состав/активность tape дают наблюдательную карту: сокращаются ли контракты, происходят ли принудительные закрытия, каковы условия удержания и характер опционной активности. Её добавочная польза для конкретного решения пока не измерена. Unsigned gamma не раскрывает позицию дилеров; call-minus-put taker flow не равен их хеджу.
+Price + changes in OI + liquidation side + funding + tape composition/activity provide an observational map: are contracts shrinking, are forced closures occurring, what are the holding conditions, and what kind of option activity is taking place? Its incremental value for a specific decision has not been measured. Unsigned gamma does not reveal dealer positions; call-minus-put taker flow is not their hedge.
 
-Литература даёт основания изучать уровни и пробои, но не подтверждает конкретно наши swing/EMA/ATR/volume-фильтры и три слоя. Исправить смысл показаний оправданно; обещать после этого точный BOS — нет.
+The literature supports studying levels and breakouts, but does not validate our particular swing/EMA/ATR/volume filters and three timeframes. Correcting what the displays mean is justified; promising accurate BOS afterwards is not.
 
-Полные определения, проверки, ограничения и источники: отчёты лабораторий, связанные из README.
+Full definitions, checks, limitations, and sources are in the laboratory reports linked from README.

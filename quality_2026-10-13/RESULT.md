@@ -1,175 +1,175 @@
-# BOS: качество состояний, причины разочарования, исправления и replay
+# BOS: state quality, unmet expectations, corrections, and replay
 
-**13.10.2026 · Codex. Статус: диагностическое исследование завершено; исправленная исследовательская версия подготовлена, в production не внедрена.**
+**13.10.2026 · Codex. Status: diagnostic research complete; a corrected research version is prepared but has not been deployed to production.**
 
-## Основной ответ
+## Main answer
 
-**Ошибки кода есть, но они не объясняют весь провал ожиданий.** После точечного исправления границы подтверждения BOS практически не становится точнее. Он не полностью хаотичен: состояния связаны с недавним движением сильнее, чем случайно сдвинутый во времени такой же поток состояний. Но это грубая, запаздывающая карта выбранных уровней, которая часто остаётся активной при нейтральном локальном ходе. Убедительной торговой добавки или надёжного улучшения от сборщиков не установлено.
+**Code errors exist, but they do not explain the entire failure to meet expectations.** A targeted correction to the confirmation boundary hardly improves BOS accuracy. It is not completely chaotic: its states relate to recent movement more strongly than a randomly time-shifted version of the same state sequence. But it is a coarse, delayed map of selected levels, often remaining active during a neutral local net move. A convincing trading contribution or reliable improvement from collectors has not been established.
 
-Новый вывод не равен «все BOS вообще бесполезны». Проверена конкретная авторская реализация и три заранее разделённых варианта. **Перестраивать её ради спасения прежних результатов сейчас не рекомендую.** Как основу торгового решения текущую ветку следует отложить; если оставлять инструмент, то для явных подтверждённых уровней/статусов и с честными ограничениями.
+This does not mean “all BOS is useless”. A specific author-defined implementation and three separately specified variants were tested. **Rebuilding it to rescue previous results is not recommended now.** Set this branch aside as the basis of a trading decision; retain the tool only for explicit confirmed levels/statuses with honest limitations.
 
-## 1. Откуда появилась ставка на BOS
+## 1. Why BOS seemed promising
 
-Основание — сохранённые документы, не догадка о мотивах Олега. В `BTC_RESEARCH_HANDOFF.md`, §0, исходная задача записана как обнаружение потенциального пампа/дампа с последующим наблюдением его развития. В §1 описан переход к SMC-структуре, три слоя и human layer.
+The basis is saved project documentation, not speculation about Oleg's motives. `BTC_RESEARCH_HANDOFF.md`, §0, records the original task as detecting a potential pump/dump and subsequently monitoring its development. §1 describes the transition to SMC structure, three timeframes, and a human layer.
 
-Что делало идею привлекательной:
+What made the idea attractive:
 
-1. Прежний экстремум и его пробой выглядят конкретнее, чем общий балл RSI/MACD/OBV. Интуиция: цена вышла из старой структуры, появился наблюдаемый уровень отмены.
-2. На выбранных больших волнах младшие слои замечали движение раньше дневного. В старом handoff — 93% охвата 1H и медианный лаг 35 часов. Это действительно привлекательное свойство наблюдения.
-3. Возникли сильные формулировки «ДОКАЗАНО» вокруг level held/lost, MAE и стопов. Они могли создать впечатление доказанной работоспособности всей системы.
-4. Когда прогноз не подтвердился, цель сместилась к «описательному сканеру», затем к деривативному контексту. При этом в интерфейсе остались BUY/SELL, quality-баллы и уровни Stop-Loss/Take-Profit.
+1. A previous extreme and its break look more concrete than a generic RSI/MACD/OBV score. The intuition: price has left its former structure, creating an observable invalidation level.
+2. On selected large waves, lower timeframes detected movement before the daily layer. The old handoff reported 93% 1H coverage and a median lag of 35 hours. This is an attractive observational property.
+3. Strong “PROVEN” language appeared around level held/lost, MAE, and stops. This could suggest that the entire system's usefulness had been established.
+4. When prediction was not confirmed, the goal shifted to a “descriptive scanner”, then derivatives context. BUY/SELL, quality scores, and Stop-Loss/Take-Profit levels nevertheless remained in the interface.
 
-Где произошёл разрыв логики:
+Where the reasoning broke down:
 
-- **Охват больших волн не равен точности всех показов.** Система с большим количеством состояний может присутствовать почти в каждой большой волне и одновременно давать массу малоинформативных показов. Сам handoff признаёт высокую частоту событий и whipsaw.
-- **Преимущество над дневным BOS не равно преимуществу над простой ценой/скользящей.** Дневной слой заведомо медленный.
-- **Удержание уровня на 5-й день — информация 5-го дня, не преимущество входа в день BOS.** Без точного времени условия и контрольной группы нельзя переносить условное разделение исходов на ранний сигнал.
-- **Корреляция Quality с будущим ходом 0.009 не доказывает сама по себе, что направление BOS — монета.** Она говорит о конкретном score. Отсутствие устойчивого эффекта BOS в Phase2A — отдельное наблюдение.
-- Отрицательные торговые тесты, испорченные методики и недостаточная выборка — разные результаты. Нельзя объединять их в доказательство «всё семейство не работает»; нельзя и спасать систему словом «сканер», не измерив пользу.
+- **Coverage of large waves is not accuracy across all displays.** A system producing many states can appear in nearly every large wave while also producing many uninformative displays. The handoff itself acknowledges frequent events and whipsaw.
+- **An advantage over daily BOS is not an advantage over simple price or a moving average.** The daily layer is inherently slow.
+- **A level holding on day 5 is day-5 information, not an entry edge on the BOS day.** Without an exact condition time and control group, conditional outcome separation cannot be transferred to an early signal.
+- **A Quality–future-move correlation of 0.009 does not by itself prove BOS direction is a coin toss.** It concerns that specific score. The lack of a stable BOS effect in Phase2A is a separate observation.
+- Negative trading tests, flawed methods, and insufficient samples are different outcomes. They cannot be merged into proof that “the entire family does not work”; nor can the system be rescued by calling it a “scanner” without measuring usefulness.
 
-Это не означает, что изначальная идея была нелепой. Переоценён был переход от разумной интуиции структуры к обещанию полезного решения.
+The initial idea was not absurd. The overstatement was the leap from reasonable structural intuition to a promise of useful decisions.
 
-## 2. Что именно проверено
+## 2. What was tested
 
-Протокол `PROTOCOL.md` создан до основных расчётов. Порогов BOS не подбирали. Данные только существующие локальные Binance spot; новые свечи не скачивались.
+`PROTOCOL.md` was created before the main calculations. BOS thresholds were not tuned. Only existing local Binance spot data were used; no new candles were downloaded.
 
-| Слой | Закрытых баров в replay | Диапазон доступности результатов |
+| Timeframe | Closed replay bars | Result-availability range |
 |---|---:|---|
 | 1H | 40 771 | 21.01.2022 20:00 — 07.10.2026 09:00 UTC |
 | 4H | 9 444 | 25.03.2022 08:00 — 07.10.2026 08:00 UTC |
 | 1D | 794 | 05.08.2024 — 07.10.2026 UTC |
 
-Каждый тик воспроизводит окно **499 закрытых свечей** production. 4H/1D построены только из полных UTC-групп 1H. На перекрытии совпали OHLCV с 1136 исходными 4H и 644 исходными 1D свечами (объём до погрешности floating point).
+Each tick reproduces the production window of **499 closed candles**. 4H/1D use only complete UTC groups of 1H candles. Overlapping OHLCV matched 1136 original 4H and 644 original 1D candles, with volume differences limited to floating-point precision.
 
-Два вопроса качества исходников обнаружены и сохранены:
+Two source-data quality issues were identified and saved:
 
-- Из 1599 совпадающих часов одна старая последняя свеча, 20.08.2026 14:00, была сохранена до закрытия: mtime 17:43 МСК, закрытие часа 18:00 МСК. Её Close/Volume заменены **в исследовательской сборке**, не в исходнике, поздней закрытой записью Binance. Расхождение сохранено в `overlap_last_partial.csv`.
-- Отсутствует 1H-свеча 24.03.2023 13:00. Нет интерполяции. Неполные агрегаты и окна 499 баров, пересекающие пропуск, исключены. Поэтому 1D имеет только 794 бара: это консервативная подвыборка дневной истории, не полный многолетний дневной replay. Увеличение периода возможно по отдельным исходным дневным данным, но нынешние выводы нельзя объявлять проверкой всех дней 2022–2026.
+- Among 1599 overlapping hours, the old final candle at 20.08.2026 14:00 had been saved before close: mtime 17:43 Moscow time, hourly close 18:00 Moscow time. Its Close/Volume were replaced **in the research assembly**, not the source, using the later closed Binance record. The discrepancy is saved in `overlap_last_partial.csv`.
+- The 1H candle at 24.03.2023 13:00 is missing. No interpolation. Incomplete aggregates and 499-bar windows crossing the gap were excluded. Hence 1D contains only 794 bars: a conservative daily-history subsample, not a complete multiyear daily replay. Separate original daily data could extend the period, but current conclusions cannot be called a test of every day in 2022–2026.
 
-Gamma-календарь: 24.08.2026 19:44 — 07.10.2026 18:20. Реальные свечи заканчиваются раньше, поэтому в общем окне оценено 1046 часов, 262 четырёхчасовых и 44 дневных закрытия. Дыры gamma не заполнялись и при проверке деривативов оставались исключёнными. Исторические годы уже были просмотрены в прежних лабораториях: **это не новый независимый holdout**.
+Gamma calendar: 24.08.2026 19:44 — 07.10.2026 18:20. Actual candles end earlier, so the common window evaluates 1046 hourly, 262 four-hour, and 44 daily closes. Gamma gaps were not filled and remained excluded in derivatives checks. Historical years had been inspected in earlier laboratories: **this is not a new independent holdout**.
 
-## 3. Ошибки и три разных варианта
+## 3. Errors and three distinct variants
 
-| Вариант | Изменение | Интерпретация |
+| Variant | Change | Interpretation |
 |---|---|---|
-| `original` | Точное историческое ядро | База сравнения |
-| `lag_fixed` | Доступен swing с i≤t−2 вместо i<t−2 | Исправление несоответствия кода заявленному лагу |
-| `fallback_contract` | То же плюс обязательное завершение по начальному BOS-уровню до нового opposing pivot | **Изменение спецификации**, а не автоматически правильный BOS |
+| `original` | Exact historical core | Comparison baseline |
+| `lag_fixed` | Swings become available at i≤t−2 instead of i<t−2 | Corrects the mismatch between code and stated lag |
+| `fallback_contract` | Same, plus mandatory termination at the initial BOS level before a new opposing pivot | **A specification change**, not automatically the correct BOS |
 
-Отдельно исправлены в исследовательском интерфейсе: ENDED не считается активным; до появления реального пивота не показывается фиктивный действующий break; закрытые свечи отбираются по времени; недостаточные/ошибочные данные — DATA_UNAVAILABLE, не NONE. Эти изменения убирают ложные сообщения, но сами по себе не создают иной исторический edge.
+Separately corrected in the research interface: ENDED is not active; no fictitious operative break is displayed before a real pivot exists; closed candles are selected by time; insufficient/error data produce DATA_UNAVAILABLE rather than NONE. These changes remove misleading messages but do not by themselves create a different historical edge.
 
-`candidate_core.py` и `candidate_helpers.py` — изолированные модули без сети/ключей/Telegram; **не файл для прямой замены bot_v2.py**. Вариант обязательного initial-level выхода реализован отдельно в replay kernel, чтобы не смешивать его с исправлениями.
+`candidate_core.py` and `candidate_helpers.py` are isolated modules without networking/keys/Telegram; **not files for directly replacing bot_v2.py**. Mandatory initial-level exit is implemented separately in the replay kernel to distinguish it from corrections.
 
-### Насколько исправления меняют состояния
+### How much the corrections change states
 
-| Слой | Изменилось ACTIVE-направление после исправления лага, вся выборка | В окне gamma |
+| Timeframe | ACTIVE direction changed after the lag correction, full sample | Gamma window |
 |---|---:|---:|
-| 1H | 0,62% баров | 1,91% |
-| 4H | 0,15% | 0% |
+| 1H | 0.62% of bars | 1.91% |
+| 4H | 0.15% | 0% |
 | 1D | 0% | 0% |
 
-Более жёсткий initial-level вариант меняет около 17% часовых/четырёхчасовых состояний и 14% дневных. Это существенная новая логика; исторические выводы для неё нужно считать заново, что здесь сделано в ограниченном заранее объявленном объёме.
+The stricter initial-level variant changes about 17% of hourly/four-hour states and 14% of daily states. This is substantial new logic; historical conclusions require recalculation, performed here within a limited, predefined scope.
 
-## 4. Насколько состояние соответствует наблюдаемой цене
+## 4. How closely states describe observed price
 
-Единой объективной метки «настоящий BULL» не существует. Основная **операционная** метка здесь: изменение закрытия за последние 12 баров больше +1ATR — вверх, меньше −1ATR — вниз, иначе нейтральный **неттоход**. Это не обязательно спокойный рынок: внутри окна может быть высокая волатильность. Метка известна в момент решения, не использует будущую цену и не зависит от BOS.
+There is no single objective “true BULL” label. The primary **operational** label here is the close change over the past 12 bars: above +1ATR is up, below −1ATR is down, otherwise a neutral **net move**. Neutral does not necessarily mean calm: intrawindow volatility can be high. The label is known at decision time, uses no future price, and does not depend on BOS.
 
-Проверены все 9 комбинаций: горизонт 6/12/24 бара × 0.5/1/2ATR. Основная комбинация не выбиралась по лучшему результату. Balanced accuracy — средняя полнота представленных классов, а не win rate сделки. При наличии трёх классов постоянный нейтральный ответ даёт 33,3%. В дневном gamma-окне в этой метке нет класса падения; полноценную трёхклассовую точность там оценивать нельзя.
+All 9 combinations were checked: 6/12/24-bar horizon × 0.5/1/2ATR. The primary combination was not selected for the best result. Balanced accuracy is mean recall over represented classes, not trade win rate. With three classes, a constant neutral response gives 33.3%. The daily gamma window contains no down class under this label, so full three-class accuracy cannot be evaluated there.
 
-### Историческая оценка основного критерия
+### Historical primary-criterion results
 
-| Слой | BOS исходный | Исправленный лаг | Initial-level выход* | Простой EMA20±0.5ATR |
+| Timeframe | Original BOS | Lag corrected | Initial-level exit* | Simple EMA20±0.5ATR |
 |---|---:|---:|---:|---:|
-| 1H | 52,45% | 52,41% | 54,86% | 74,70% |
-| 4H | 53,38% | 53,41% | 56,11% | 73,88% |
-| 1D | 48,28% | 48,28% | 50,15% | 73,68% |
+| 1H | 52.45% | 52.41% | 54.86% | 74.70% |
+| 4H | 53.38% | 53.41% | 56.11% | 73.88% |
+| 1D | 48.28% | 48.28% | 50.15% | 73.68% |
 
-\*Изменение спецификации. Улучшение не следует называть найденной прибыльностью.
+\*Specification change. Improvement must not be described as discovered profitability.
 
-EMA лучше по всем 9 определениям на исторической выборке каждого TF. По годам 1H/4H разрыв также сохраняется. Но есть **существенная цена сравнения**: EMA переключается примерно в 6 раз чаще. 1H BOS — 0,90 смены/день, EMA20 — 5,67. Поэтому это не доказательство превосходства EMA при одинаковой нагрузке.
+EMA is better under all 9 definitions in each timeframe's historical sample. The gap also persists by year for 1H/4H. But there is a **material comparison cost**: EMA switches approximately 6 times as often. 1H BOS: 0.90 changes/day; EMA20: 5.67. This does not prove EMA superiority at equal switching load.
 
-После основной проверки выполнен явно обозначенный exploratory-контроль: EMA обновляется только раз в 24 бара. Частота 1H снижается до 0,63/день, оценка — до 45,42%, ниже BOS. На 4H аналогично 42,80%, на 1D 47,38%. Это **не идеально уравненное сравнение**, а демонстрация компромисса быстроты и персистентности. Нельзя честно заключить, что любой простой метод всегда лучше BOS.
+An explicitly exploratory control followed the main check: update EMA only once every 24 bars. 1H frequency falls to 0.63/day and the score to 45.42%, below BOS. Corresponding scores are 42.80% on 4H and 47.38% on 1D. This is **not a perfectly matched comparison**, but demonstrates the speed/persistence trade-off. It is not valid to conclude that every simple method always beats BOS.
 
-7-дневный парный блочный bootstrap даёт для lag_fixed−original на 1H −0,04 п.п. с интервалом примерно [−0,13; +0,04] п.п.; на 4H +0,03 п.п. [−0,03; +0,14]. Улучшение после lag-fix не установлено. Для EMA разрыв в пользу более быстрого описания большой, но этот интервал не устраняет различие частот переключения. Блоки/сдвиги — диагностические приближения, особенно ограниченные при длительных дневных состояниях и всего 7 недельных блоках gamma.
+A paired 7-day block bootstrap gives lag_fixed−original on 1H of −0.04 percentage points, with an interval approximately [−0.13; +0.04] points; on 4H, +0.03 points [−0.03; +0.14]. Improvement from the lag fix is not established. EMA's faster descriptive response has a large advantage, but its interval does not remove the difference in switching frequency. Blocks/shifts are diagnostic approximations, especially limited by long daily states and only 7 weekly blocks in the gamma period.
 
-### Что сопровождает ACTIVE в окне gamma
+### What ACTIVE accompanies during the gamma window
 
-Проценты от **активных баров**, не от всех свечей и не доля убыточных сделок:
+Percentages are of **active bars**, not all candles or losing trades:
 
-| Слой | Неттоход в сторону состояния | Нейтральный неттоход | Против состояния |
+| Timeframe | Net move aligned with state | Neutral net move | Opposite to state |
 |---|---:|---:|---:|
-| 1H | 50,4% | 42,0% | 7,6% |
-| 4H | 50,3% | 35,9% | 13,7% |
-| 1D | 56,1% | 43,9% | 0%* |
+| 1H | 50.4% | 42.0% | 7.6% |
+| 4H | 50.3% | 35.9% | 13.7% |
+| 1D | 56.1% | 43.9% | 0%* |
 
-\*Нет BEAR-класса в выбранном 12-дневном критерии этого короткого окна. Это не доказательство безошибочности 1D.
+\*No BEAR class under the selected 12-day criterion in this short window. Not evidence of flawless 1D performance.
 
-Пример: 19.09 03:00–11:00 UTC часовой BULL остаётся активным, цена меняется примерно с $81 305 до $81 217, а локальный 12-часовой неттоход остаётся нейтральным по критерию. То, что пользователь замечает «BULL на нейтрали», действительно есть. Но называть каждый такой бар ложным сигналом неверно: состояние первоначально означает «ещё не выполнено правило структурного завершения».
+Example: on 19.09 03:00–11:00 UTC, hourly BULL remains active while price changes approximately from $81 305 to $81 217 and the local 12-hour net move remains neutral under the criterion. The user's observation of “BULL during neutrality” is real. Calling every such bar a false signal is nevertheless inaccurate: the original state means “the structural termination rule has not yet been met”.
 
-**Вывод про сломанные часы:** случайные циклические сдвиги сохраняют долю BULL/BEAR и продолжительность состояний, но теряют привязку ко времени. На длинной истории 1H/4H реальный descriptive score существенно выше таких сдвигов; в gamma это тоже наблюдается. Дневной gamma-слой почти постоянен и преимущество над сдвигами не устанавливается. Значит младшие слои не чистая случайность, однако их временная связь с прошлым движением не является прогнозом.
+**The broken-clock question:** random circular shifts preserve BULL/BEAR proportions and state durations but remove temporal alignment. Over the long history, the actual 1H/4H descriptive score is substantially above such shifts; this also occurs in the gamma period. Daily states during gamma are almost constant, and no advantage over shifts is established. Lower timeframes are therefore not pure randomness, but their temporal association with past movement is not a forecast.
 
-## 5. Почему прежние 93% охвата могли выглядеть убедительно
+## 5. Why the earlier 93% coverage looked convincing
 
-Supplement после основной проверки: отдельная ретроспективная разметка 8%-волн по часовой цене закрытия, порог взят из прежней ветки. Не точное воспроизведение старых 134 волн: иной конец данных, закрытия, консервативные исключения и прогрев. Экстремумы используются **только для оценки**, в детектор не передаются.
+Supplement after the primary check: a separate retrospective labelling of 8% waves using hourly closes, taking the threshold from the earlier branch. Not an exact reproduction of the old 134 waves: the data cutoff, closes, conservative exclusions, and warmup differ. Extremes are used **only for evaluation**, never passed to the detector.
 
-- 1H: 138 завершённых доступных волн, охват хотя бы одним совпавшим ACTIVE — **93,5%**, медианный лаг среди пойманных **35 часов**.
-- 4H: 127 волн, охват **74,0%**, лаг **93,5 часа**.
-- 1D: 61 волна, охват **45,9%**, лаг **88,5 часа**; выборка отличается от 1H и старого handoff, напрямую сравнивать эти медианы нельзя.
+- 1H: 138 completed available waves, coverage by at least one direction-matching ACTIVE state **93.5%**, median lag among detected waves **35 hours**.
+- 4H: 127 waves, coverage **74.0%**, lag **93.5 hours**.
+- 1D: 61 waves, coverage **45.9%**, lag **88.5 hours**; its sample differs from 1H and the old handoff, so these medians cannot be compared directly.
 
-Отдельно учтено наличие уже активного совпадающего состояния в начале волны: 2,2% на 1H, 5,5% на 4H, 23,0% на 1D. Initial-level вариант не повышает часовой охват и не уменьшает часовой лаг.
+A matching state already active at wave onset was counted separately: 2.2% on 1H, 5.5% on 4H, 23.0% on 1D. The initial-level variant neither increases hourly coverage nor reduces hourly lag.
 
-Итак, сам эффект «оказался внутри большинства крупных волн» воспроизводится. Но он не отвечает на вопрос, сколько лишних состояний, что было известно до значительного хода и что остаётся после показа. Здесь и возникло завышенное ожидание.
+Being “present inside most large waves” thus reproduces. But it does not answer how many extra states occur, what was known before a substantial move, or how much movement remains after the display. This is where expectations became overstated.
 
-## 6. Будущее после сигнала — отдельный вопрос
+## 6. Future movement after a signal is a separate question
 
-Чтобы не подменять прогноз описанием, посчитан следующий 12-барный направленный ход от **каждого активного бара**, не только первого удачного входа.
+To distinguish description from prediction, the next 12-bar direction-aligned move was measured from **every active bar**, not merely a favourable first entry.
 
-В gamma у исходного/исправленного 1H медиана следующего 12-часового хода около **−0,11% / −0,09%**, положительный исход **44,7% / 45,4%**. Initial-level вариант: **−0,21%**, положительный исход **40,7%**. На 4H следующий горизонт равен **48 часам**, а на 1D — **12 дням**, поэтому эти числа нельзя смешивать с 12-часовым прогнозом. Полная таблица — `forward_active.csv`.
+During gamma, original/lag-fixed 1H median next-12-hour moves were approximately **−0.11% / −0.09%**, with positive outcomes **44.7% / 45.4%**. Initial-level variant: **−0.21%**, positive outcomes **40.7%**. On 4H the next horizon is **48 hours**; on 1D it is **12 days**, so these figures cannot be pooled as 12-hour forecasts. Full table: `forward_active.csv`.
 
-На длинной истории результаты разных TF/горизонтов неодинаковы, местами средний ход положителен; это не заявление, что любое продолжение исключено. Окна перекрываются, издержек/исполнения нет, испытанной стратегии нет. Новая проверка **не показала, что устранение ошибок превращает BOS в надёжный прогноз**. Она согласуется с осторожным выводом Phase2A, не заменяет его новым торговым бэктестом.
+Long-history results differ across timeframes/horizons; some mean moves are positive. This does not claim that every continuation is ruled out. Windows overlap, costs/execution are absent, and no strategy is validated. The new test **did not show that correcting errors turns BOS into a reliable forecast**. It agrees with the cautious Phase2A conclusion without replacing it with a new trading backtest.
 
-## 7. Связи со сборщиками: что осталось после исправлений
+## 7. Collector relationships after corrections
 
-Повторены **только два фиксированных кандидата**, без перебора 272 вариантов. Сохранены исходные определения/маски gamma/tape, причинные окна и исход MAE24. На исходных событиях численно воспроизвелись признаки и MAE: ошибки до floating point ~10⁻¹³, не новая независимая валидация.
+**Only the two fixed candidates** were repeated, without searching 272 variants. Original gamma/tape definitions/masks, causal windows, and MAE24 outcomes were retained. On original events, features and MAE reproduced numerically within floating-point errors of approximately 10⁻¹³. This is not new independent validation.
 
-| Вариант | Tape перед стартом 1H: валидное N / rho с MAE24 | Gamma на переходах: N / rho |
+| Variant | Tape before 1H starts: valid N / rho with MAE24 | Gamma at transitions: N / rho |
 |---|---:|---:|
-| Исходный | 14 / +0,618 | 36 / −0,580 |
-| Исправленный лаг | 14 / +0,618 | 35 / −0,562 |
-| Initial-level выход* | 19 / +0,289 | 49 / −0,221 |
+| Original | 14 / +0.618 | 36 / −0.580 |
+| Lag corrected | 14 / +0.618 | 35 / −0.562 |
+| Initial-level exit* | 19 / +0.289 | 49 / −0.221 |
 
-Число мульти-ТФ переходов: 43 → 42 → 55. В общем окне новые реальные старты 1H: 16 исходных/lag-fixed, 22 initial-level; 4H: 5 / 5 / 6. Phase2A указывал 17/6, включая один 1H и один 4H старт, начавшиеся до общей границы 29.08. Это различие левого цензурирования, не пропавшие события и не новая ошибка BOS. Все 16/5 общих исходных стартов совпали по времени и направлению.
+Multitimeframe transition counts: 43 → 42 → 55. New actual 1H starts within the common window: 16 original/lag-fixed, 22 initial-level; 4H: 5 / 5 / 6. Phase2A reported 17/6, including one 1H and one 4H start before the common 29.08 boundary. This is a left-censoring difference, not missing events or a new BOS error. All 16/5 common original starts match in time and direction.
 
-**Следствие:** маленький кодовый fix не спасает и не опровергает прежние деривативные выводы. Существенная новая спецификация ослабляет зацепки на этой же discovery-выборке. Для OI/funding/ликвидаций новые настройки не перебирались: их прежний отрицательный/слабый результат остаётся результатом прежней спецификации, не доказательством отсутствия любой связи после любых перестроений.
+**Implication:** a small code fix neither rescues nor refutes the earlier derivatives findings. A substantial new specification weakens the leads on the same discovery sample. New OI/funding/liquidation settings were not searched: their earlier negative/weak result remains a result for the earlier specification, not proof that no relationship could exist after any redesign.
 
-Нельзя говорить «сборщики с BOS точно никак не связаны»: мало независимых режимов, пропуски, unsigned gamma без позиции дилеров, опционный поток не равен dealer hedge, forceOrder — выборка. Но практического основания строить по этим двум зацепкам новый BOS сейчас нет. Данные после 07.10 не загружались; forward-подтверждение здесь не заявлено.
+It is not valid to say “collectors definitely have no relationship with BOS”: few independent regimes, gaps, unsigned gamma without dealer positions, option flow not equal to dealer hedging, and sampled forceOrder data limit inference. But there is currently no practical basis for building a new BOS around these two leads. Data after 07.10 were not downloaded; no forward confirmation is claimed.
 
-## 8. Что дала литература
+## 8. What the literature contributes
 
-Полный адресный разбор — `LITERATURE.md`, с первоисточниками и границами чтения.
+Full focused review: `LITERATURE.md`, including primary sources and limits of reading.
 
-- [CME](https://www.cmegroup.com/education/courses/technical-analysis/support-and-resistance): прежние экстремумы и пробой — осмысленная учебная интуиция, но не доказательство наших порогов.
-- [Lo–Mamaysky–Wang](https://web.mit.edu/wangj/www/pap/LoMamayskyWang00.pdf): распознавание некоторых фигур может нести информацию; это не обязательно торговая прибыль.
-- [Sullivan–Timmermann–White](https://eprints.lse.ac.uk/119144/1/dp303.pdf): хорошие исторические breakout-правила могли не повторить преимущество на следующих годах.
-- [Osler](https://www.newyorkfed.org/research/staff_reports/sr125.html): есть механизм уровней через размещение ордеров, но наш фильтрованный swing сам по себе не наблюдаемая ликвидность.
-- [Borgards](https://community.portfolio123.com/uploads/short-url/amrMsuqIKzdHcHHyvMud4YNPwZB.pdf): близкая идея структурных momentum-циклов, однако другой алгоритм, выборка и условия торговли; готовым подтверждением нашей реализации не является.
+- [CME](https://www.cmegroup.com/education/courses/technical-analysis/support-and-resistance): previous extremes and breaks are reasonable educational intuition, not validation of our thresholds.
+- [Lo–Mamaysky–Wang](https://web.mit.edu/wangj/www/pap/LoMamayskyWang00.pdf): some recognised patterns may contain information; this need not imply trading profit.
+- [Sullivan–Timmermann–White](https://eprints.lse.ac.uk/119144/1/dp303.pdf): good historical breakout rules may not repeat their advantage in later years.
+- [Osler](https://www.newyorkfed.org/research/staff_reports/sr125.html): order placement provides a mechanism for levels, but our filtered swing is not itself observed liquidity.
+- [Borgards](https://community.portfolio123.com/uploads/short-url/amrMsuqIKzdHcHHyvMud4YNPwZB.pdf): a related structural momentum-cycle idea, with a different algorithm, sample, and trading assumptions; not ready validation of this implementation.
 
-В прочитанных первоисточниках не найдено подтверждения, что именно 5-bar swing + EMA/ATR/volume + три слоя должны точно размечать BTC или предсказывать продолжение. Modern SMC vocabulary, классические уровни, statistical structural breaks и TSMOM нельзя смешивать как одно доказательство.
+The reviewed primary sources did not establish that 5-bar swings + EMA/ATR/volume + three timeframes should accurately label BTC or predict continuation. Modern SMC vocabulary, classical levels, statistical structural breaks, and TSMOM must not be pooled as one body of validating evidence.
 
-## 9. Решение по ветке
+## 9. Decision on this branch
 
-**Что уже стоит сделать:** принять смысловые исправления для достоверности наблюдения, если инструмент остаётся в работе. Это отдельное решение о внедрении; работающий bot_v2.py здесь не трогали.
+**Worth doing now:** adopt semantic corrections for trustworthy observation if the tool stays in use. Deployment is a separate decision; the running bot_v2.py was not touched here.
 
-**Что не стоит делать:** считать найденные баги причиной всех отрицательных лабораторий, запускать новый подбор фильтров, перестраивать BOS только ради слабой gamma/tape-корреляции, выдавать 93% охвата за точность или EMA-сравнение за готовую прибыльную замену.
+**Not justified:** treating bugs as the explanation for every negative laboratory, launching another filter search, rebuilding BOS solely around weak gamma/tape correlations, presenting 93% coverage as accuracy, or treating the EMA comparison as a profitable ready replacement.
 
-**Рекомендация:** заморозить текущую BOS-ветку как основу торгового решения. Наблюдательный инструмент оставить только если подтверждённые уровни и редкие смены состояния лично полезны Олегу. Если нужен точный текущий рост/боковик/падение, это отдельная спецификация с явным горизонтом и допустимой задержкой; нынешний BOS не выполняет эту роль достаточно точно, а литература не обязывает продолжать его спасение. Полностью новый детектор/стратегия в этой работе не строились.
+**Recommendation:** freeze the current BOS branch as a trading-decision foundation. Retain an observational tool only if confirmed levels and infrequent state changes are personally useful to Oleg. An accurate current up/sideways/down display requires a separate specification with an explicit horizon and acceptable delay. Current BOS does not fulfil that role accurately enough, and the literature does not require continued attempts to rescue it. No entirely new detector/strategy was built in this work.
 
-## 10. Проверки и артефакты
+## 10. Checks and artifacts
 
-- 75 детерминированных окон: оптимизированный оригинальный replay совпал с точными AST-функциями по state/direction/start, действующему break и EMA/ATR.
-- 30 окон: lag-fixed совпал с отдельным candidate_core. 7 проверок контракта закрытых свечей/ENDED/DATA_UNAVAILABLE — PASS.
-- На 43 исходных мульти-ТФ переходах и 16 общих стартах 1H воспроизвелись прежние frozen признаки и MAE.
-- Никаких production-импортов, сетевых свечей, сообщений, ордеров, изменения сборщиков или перезапусков.
-- `replay.py`, `quality.py`, `collectors.py`, `supplement.py`, `figures.py` — расчёты; `candidate_core.py`, `candidate_helpers.py`, `test_candidate.py` — кандидат и проверки; `metrics.csv`, `variant_changes.csv`, `fixed_collectors_summary.csv`, `waves_8pct_summary.csv`, `shift_null.csv`, `block_ci.csv` — результаты; `manifest.json` — хеши источников/выходов.
+- 75 deterministic windows: optimised original replay matched exact AST functions on state/direction/start, operative break, and EMA/ATR.
+- 30 windows: lag-fixed matched the separate candidate_core. 7 closed-candle/ENDED/DATA_UNAVAILABLE contract checks — PASS.
+- Earlier frozen features and MAE reproduced on 43 original multitimeframe transitions and 16 common 1H starts.
+- No production imports, network candles, messages, orders, collector changes, or restarts.
+- `replay.py`, `quality.py`, `collectors.py`, `supplement.py`, `figures.py` — calculations; `candidate_core.py`, `candidate_helpers.py`, `test_candidate.py` — candidate and checks; `metrics.csv`, `variant_changes.csv`, `fixed_collectors_summary.csv`, `waves_8pct_summary.csv`, `shift_null.csv`, `block_ci.csv` — results; `manifest.json` — source/output hashes.
 
-Ограничения: новый аудит кода не является независимым аудитом другим ИИ; 75/30 окон — выборочная проверка ускоренной реализации, не построчное независимое доказательство каждого из 51 009 тиков; neutral-прокси условен; baselines имеют другую частоту обновления; длинная история уже просмотрена; деривативная выборка мала. Основной вывод о том, что точечный fix не спасает прежнюю идею, устойчив в пределах этих проверок.
+Limitations: a new code audit is not an independent audit by another AI; 75/30 windows sample-check the accelerated implementation, rather than independently proving every line of each of 51 009 ticks; the neutral proxy is conditional; baselines update at different rates; the long history was already inspected; the derivatives sample is small. Within these checks, the conclusion that a targeted fix does not rescue the earlier idea is robust.

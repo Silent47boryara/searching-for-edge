@@ -1,157 +1,157 @@
-# Сборщики отдельно от BOS: отдельные потоки и сочетания
+# Collectors without BOS: individual feeds and combinations
 
-**14.10.2026 · Codex. Завершена первая ограниченная проверка. BOS нигде не использован как признак, фильтр или время события. Production не менялся.**
+**14.10.2026 · Codex. First bounded test completed. BOS was not used as a feature, filter, or event time. Production was unchanged.**
 
-## Ответ на задачу
+## Answer to the research question
 
-**Полезную информацию можно извлечь, но её вид надо назвать точно.** Ликвидации + OI помогают описывать происходящее сокращение/рост открытых позиций; funding задаёт условия удержания perpetual; опционный поток и ликвидации отражают текущий стресс. Это наблюдаемые сведения, а не доказанная прибыльность торговых решений.
+**Useful information can be extracted, but its type must be named precisely.** Liquidations + OI describe current contraction/growth in open positions; funding defines perpetual holding conditions; option flow and liquidations reflect current stress. These are observable facts, not established profitability of trading decisions.
 
-При проверке добавки к цене/волатильности в прогнозе следующих 4 часов **ни один отдельный поток или выбранное сочетание не показали устойчивого улучшения**. Небольшие положительные числа есть, однако интервалы включают ноль, результаты по неделям неодинаковы. Это вывод о данном наборе определений, выборке и простой диагностической регрессии, не доказательство отсутствия любой возможной пользы данных.
+In tests of incremental forecasting value beyond price/volatility over the next 4 hours, **neither an individual feed nor a selected combination showed stable improvement**. Some small positive numbers exist, but intervals include zero and results differ by week. This concerns the chosen definitions, sample, and simple diagnostic regression; it does not prove that the data have no possible use.
 
-Самое полезное сейчас — построить явную карту наблюдаемых режимов, не называя её BUY/SELL. Две прогнозные зацепки ниже остаются только вопросами для проверки, не основанием перестраивать всё или закрывать сбор данных.
+The most useful immediate application is an explicit map of observable regimes, without BUY/SELL labels. The two predictive leads below remain questions for testing, not reasons to rebuild everything or stop collecting data.
 
-## 1. Что и на каких данных проверяли
+## 1. Tests and data
 
-План `PROTOCOL.md` сохранён до расчёта результатов. Пять потоков: OI, funding/mark, ликвидации, gamma, option tape. Полный период mark-данных: **29.08.2026 11:28 — 14.10.2026 00:00 UTC**, около 45,5 суток. Все времена ниже UTC, для Москвы +3 часа.
+`PROTOCOL.md` was saved before calculating results. Five feeds: OI, funding/mark, liquidations, gamma, and option tape. Full mark-data period: **29.08.2026 11:28 — 14.10.2026 00:00 UTC**, approximately 45.5 days. All times below are UTC; add 3 hours for Moscow.
 
-Цена — **Binance mark price** из самого коллектора, на всём периоде один источник. Не смешивали его с более короткими spot-свечами прежних лабораторий. 3 690 373 сообщения сведены в минутные закрытия. Из 65 552 минут 61 333 прошли критерий полноты. Первые неполные окна и пропуски исключены.
+Price is **Binance mark price** from the collector itself, consistently sourced throughout. It was not mixed with the shorter spot-candle series from earlier laboratories. 3 690 373 messages were reduced to minute closes. Of 65 552 minutes, 61 333 passed the completeness criterion. Initial incomplete windows and gaps were excluded.
 
-Фиксированные признаки:
+Fixed features:
 
-| Поток | Признаки, известные к T |
+| Feed | Features available by T |
 |---|---|
-| OI | log(OI(T)/OI(T−4h)); оба конца не старше 15 минут |
-| Funding | последняя ставка, полученная до T, возраст ≤60 секунд |
-| Ликвидации | log(1+USD за 4h), баланс (short_liq−long_liq)/сумма |
-| Gamma | unsigned асимметрия в ±5% от spot; log(1+суммарная gamma в полосе) |
-| Tape | log(1+опционный notional за 4h); (знаковый call notional−знаковый put notional)/весь notional |
+| OI | log(OI(T)/OI(T−4h)); both endpoints no older than 15 minutes |
+| Funding | Last rate received before T, age ≤60 seconds |
+| Liquidations | log(1+USD over 4h), imbalance (short_liq−long_liq)/total |
+| Gamma | Unsigned asymmetry within ±5% of spot; log(1+total gamma in the band) |
+| Tape | log(1+option notional over 4h); (signed call notional−signed put notional)/total notional |
 
-Сочетания заданы заранее: OI+funding, OI+ликвидации, OI+tape, funding+ликвидации, gamma+tape, ликвидации+tape, все пять. В парах проверяются отдельные признаки и заранее указанные произведения, без поиска оптимальных порогов.
+Predefined combinations: OI+funding, OI+liquidations, OI+tape, funding+liquidations, gamma+tape, liquidations+tape, all five. Pairs include individual features and predefined products, without searching optimal thresholds.
 
-Основные исходы: доходность следующих 4 часов и реализованная волатильность следующих 4 часов по минутным изменениям mark price. Решения на сетке каждые 4 часа, поэтому основные будущие окна не перекрываются. Будущее известно только для оценки, не в признаках.
+Primary outcomes: next-4-hour return and next-4-hour realised volatility from minute mark-price changes. Decisions occur every 4 hours, making primary future windows non-overlapping. Future information is used only in evaluation, not features.
 
-**Контроль:** прошедшие 1h/4h доходности и волатильность прошедших 4h/24h. Для каждого сочетания сравнение с ценой выполнено на **одних и тех же строках и датах**, чтобы более полные данные одной модели не создавали преимущество.
+**Controls:** past 1h/4h returns and past 4h/24h volatility. Each combination is compared against price on **the same rows and dates**, preventing more complete data from giving a model an artificial advantage.
 
-Диагностическая модель — стандартизованная Ridge(alpha=10), без подбора параметров. Первые 14 календарных суток — начальное обучение, затем недельные проверки с расширяющимся обучением. Обучающие исходы должны быть уже известны к началу тестовой недели. От 36 обучающих строк, минимум 8 тестовых на недельный блок. Всего 24 основные проверки (12 наборов × 2 исхода); парный суточный block bootstrap и sign-flip, поправка Holm по всем 24.
+The diagnostic model is standardised Ridge(alpha=10), without parameter tuning. The first 14 calendar days initialise training, followed by weekly tests with expanding training. Training outcomes must already be known at the test week's start. At least 36 training rows and 8 test rows per weekly block are required. There are 24 primary tests (12 feature sets × 2 outcomes), with paired daily block bootstrap and sign-flip tests, and Holm correction across all 24.
 
-**Это не торговая стратегия и не незатронутый OOS:** исторические данные уже просматривались в других исследованиях. Это проверка переноса фиксированного способа использования данных на следующие недели внутри доступного периода. Линейная модель с взаимодействиями не исчерпывает все возможные применения.
+**This is neither a trading strategy nor untouched OOS:** historical data were already inspected in other studies. It tests transfer of a fixed way of using data to subsequent weeks within the available period. A linear model with interactions does not exhaust all possible applications.
 
-## 2. Время доступности и качество — существенные отличия от прежних лабораторий
+## 2. Availability time and quality: important differences from earlier laboratories
 
-1. **Tape:** сделка должна одновременно иметь exchange time ≤T и recv time ≤T. Поздняя догрузка не становится якобы известной в прошлом. В сырой ленте медианная задержка около 9 секунд, 90-й перцентиль около 24 минут, 99-й — около 15 часов. Часть приходится на известные проблемы и догрузку; эти квантили не означают постоянную задержку всей ленты.
-2. **Gamma:** timestamp снимка ставится до запросов. Здесь доступность восстановлена по `snapshot ok` в collector log, после записи CSV, с сопоставлением времени и округлённого spot. Из raw агрегированы 6654 групп-частей по снимкам, после подтверждения успешного завершения оставлено 5275 наблюдаемых снимков. Несопоставленные не использовались. Медианная задержка завершения 17 секунд, p99 около 159 секунд, максимум в сопоставленных случаях около 17,6 минут. Таким образом снят риск брать незавершённый снимок на границе часа.
-3. **Ликвидации:** новые маски по disconnect/reconnect и heartbeat >15 минут, 207 объединённых окон. Тишина при живом heartbeat — нулевые события, не ошибка. Окно признака требует ≥90% валидного времени.
-4. **Tape:** сохранено исключение 02.10 00:00 — 06.10 23:05; после начала сохранившихся логов использованы gaps heartbeat. До 14.09 13:59 сохранённые ротации уже отсутствуют: использованы прежний аудит и консервативные общие простои funding. Это ограничение проверки доставки ранней tape-истории, а не доказательство полной её исправности.
-5. **Gamma:** сохранена большая дыра 02.10 10:10 — 06.10 23:10; после восстановления допускаются только реально завершённые свежие снимки. Не переносили прежнее безусловное исключение всех данных после дыры навсегда.
-6. **Mark:** пропущенные минуты не заполнялись; волатильность не считалась через разрыв. Прошедшее/будущее окно допускается только при ≥90% валидных минутных доходностей; missing не превращается в нулевую волатильность.
+1. **Tape:** trades must have both exchange time ≤T and receive time ≤T. A late backfill is not treated as known in the past. Raw tape median delay is about 9 seconds, 90th percentile about 24 minutes, and 99th about 15 hours. Some reflects known problems/backfills; these quantiles do not imply a constant delay across the entire tape.
+2. **Gamma:** snapshot timestamps precede requests. Availability was reconstructed from collector-log `snapshot ok` messages after CSV writes, matching timestamp and rounded spot. Raw data yielded 6654 snapshot group-parts; confirmation of successful completion retained 5275 observable snapshots. Unmatched observations were excluded. Median completion delay is 17 seconds, p99 about 159 seconds, maximum matched delay about 17.6 minutes. This avoids taking an unfinished snapshot at an hourly boundary.
+3. **Liquidations:** new masks use disconnect/reconnect and heartbeat gaps >15 minutes, yielding 207 merged windows. Silence with a live heartbeat means zero events, not an error. Feature windows require ≥90% valid time.
+4. **Tape:** the 02.10 00:00 — 06.10 23:05 exclusion remains; heartbeat gaps are used after retained logs begin. Rotations before 14.09 13:59 are no longer available: earlier audits and conservative shared funding outages were used. This limits verification of delivery in early tape history, rather than proving its complete reliability.
+5. **Gamma:** the major gap 02.10 10:10 — 06.10 23:10 remains; after recovery, only actually completed, fresh snapshots are allowed. The old unconditional exclusion of all post-gap data was not extended forever.
+6. **Mark:** missing minutes were not filled; volatility was not calculated across a gap. Past/future windows require ≥90% valid minute returns; missing does not become zero volatility.
 
-На часовой сетке доступны: OI 977 значений, funding 1029, ликвидации 953, gamma 778, tape 895. После полной цены, прошлой волатильности, будущего исхода и хронологического обучения остаётся **51–119 тестовых четырёхчасовых окон**, 14–25 отдельных суток. Это главный предел уверенности.
+On the hourly grid: 977 OI values, 1029 funding, 953 liquidations, 778 gamma, and 895 tape. Requiring complete price, past volatility, future outcome, and chronological training leaves **51–119 test four-hour windows**, covering 14–25 distinct days. This is the main confidence limit.
 
-## 3. Что потоки показывают уже сейчас
+## 3. What the feeds already show
 
-### Ликвидации: измерение текущего вынужденного закрытия
+### Liquidations: measuring current forced closures
 
-На неперекрывающихся 4h наблюдениях:
+On non-overlapping 4h observations:
 
-- активность ликвидаций ↔ уже реализованная волатильность этих 4h: Spearman **0,82**;
-- баланс ликвидаций ↔ направление движения в этих 4h: **0,64**.
+- Liquidation activity ↔ volatility already realised within those 4h: Spearman **0.82**.
+- Liquidation imbalance ↔ price direction within those 4h: **0.64**.
 
-Это содержательная одновременная связь. Она **не означает**, что ликвидации были известны перед падением/ростом. Сама цена уже содержит значительную часть этой информации. Сырая связь активности с будущей волатильностью 0,46 после учёта прошедшей цены/волатильности снижается примерно до 0,04 в частной ранговой диагностике.
+This is a meaningful contemporaneous relationship. It **does not mean** liquidations were known before the decline/rise. Price itself already contains much of this information. The raw relationship between activity and future volatility, 0.46, falls to approximately 0.04 after controlling for past price/volatility in a partial-rank diagnostic.
 
-Отличие от одного графика — в потоке непосредственно видны события принудительного закрытия и их сторона. Но Binance forceOrder не представляет все ликвидации рынка: биржа ограничивает выдачу snapshot. [Документация Binance](https://developers.binance.info/docs/derivatives/usds-margined-futures/websocket-market-streams/All-Market-Mini-Tickers-Stream).
+Compared with a price chart alone, the feed directly shows forced-closure events and their side. Binance forceOrder does not represent every market liquidation: the exchange limits snapshot delivery. [Binance documentation](https://developers.binance.info/docs/derivatives/usds-margined-futures/websocket-market-streams/All-Market-Mini-Tickers-Stream).
 
-### OI + цена + ликвидации: четыре разных состояния
+### OI + price + liquidations: four distinct states
 
-| Наблюдение | Что известно | Чего из этого не следует |
+| Observation | What is known | What does not follow |
 |---|---|---|
-| Цена вниз, OI вниз, преобладают long liquidations | Нетто-сокращение открытых контрактов и наблюдаемые принудительные закрытия лонгов | Что продавцы исчерпались или отскок начинается сейчас |
-| Цена вниз, OI вверх | Нетто-рост открытых контрактов одновременно с падением | Что открылись именно шорты: у каждого контракта две стороны |
-| Цена вверх, OI вниз | Рост цены при нетто-сокращении контрактов; short liquidations могут дополнить картину | Что весь рост объясняется только short squeeze |
-| Цена вверх, OI вверх | Рост цены вместе с числом открытых контрактов | Что движение обязательно продолжится |
+| Price down, OI down, long liquidations dominate | Net reduction in open contracts and observed forced long closures | Sellers are exhausted or a rebound starts now |
+| Price down, OI up | Net growth in open contracts alongside a decline | Specifically shorts were opened: each contract has two sides |
+| Price up, OI down | Rising price with net contraction of contracts; short liquidations may add context | The entire rise is explained by a short squeeze |
+| Price up, OI up | Rising price and open-contract count | The move must continue |
 
-В данных есть все четыре режима: 51 / 56 / 66 / 55 полных наблюдений по комбинациям price_down/OI_down, price_down/OI_up, price_up/OI_down, price_up/OI_up соответственно. Это описательные N, не независимые подтверждения и не равные знаменатели для будущих исходов.
+All four regimes appear: 51 / 56 / 66 / 55 complete observations for price_down/OI_down, price_down/OI_up, price_up/OI_down, price_up/OI_up respectively. These are descriptive Ns, not independent confirmations or equal denominators for future outcomes.
 
-**Иллюстрация, выбранная после просмотра, не доказательство стратегии:** 08.10 в 16:00 за последние 4h mark price снизился примерно на **1,77%**, OI — на **2,38%**; в нашем потоке около **$51,4 млн** ликвидаций, баланс −0,90 (около 95% notional приходится на long liquidations). Следующие 4h цена выросла примерно на 0,89%. В другой ситуации, 07.10 в 04:00, цена упала на 1,65%, а OI **вырос** примерно на 1,06%, при преобладании long liquidations. Следующие 4h почти без изменения. Сочетание различает наблюдаемое состояние позиций; универсального вывода о следующем ходе нет.
+**Illustration selected after inspection, not strategy evidence:** on 08.10 at 16:00, mark price fell approximately **1.77%** over the preceding 4h and OI **2.38%**; the feed recorded about **$51.4 million** in liquidations, imbalance −0.90 (about 95% of notional from long liquidations). Price rose approximately 0.89% over the next 4h. In another case, 07.10 at 04:00, price fell 1.65% while OI **rose** about 1.06%, with long liquidations dominant. The next 4h were almost unchanged. The combination distinguishes observed positioning states; it gives no universal conclusion about the next move.
 
-### Funding: условия удержания, не найденный прогноз направления
+### Funding: holding conditions, not a discovered direction forecast
 
-Funding пригоден для учёта потенциальной стоимости/дохода удержания perpetual и наблюдения изменения премии. При положительной ставке платят лонги, при отрицательной — шорты; живая ставка до расчёта может измениться. [Binance: funding fees](https://www.binance.com/en/academy/glossary/funding-fees).
+Funding helps account for the potential cost/income of holding perpetuals and observe changing premiums. Positive rates are paid by longs; negative rates by shorts. The live rate may change before settlement. [Binance: funding fees](https://www.binance.com/en/academy/glossary/funding-fees).
 
-В нашем прогнозном сравнении добавка funding к цене не улучшила направление на следующих неделях. Это не делает саму ставку бесполезной для учёта издержек. «Высокий funding значит пора шортить» этой проверкой не подтверждён.
+In our forecasting comparison, adding funding to price did not improve direction forecasts in subsequent weeks. This does not make the rate useless for cost accounting. “High funding means it is time to short” was not confirmed.
 
-### Option tape: активность стресса, осторожно со знаком
+### Option tape: stress activity, with caution about sign
 
-Активность tape ↔ текущая волатильность: **0,76**; flow-imbalance ↔ текущее направление: **0,28**. После учёта цены связь активности с будущей волатильностью остаётся около 0,28 в описательной частной корреляции, однако устойчивого улучшения недельного прогноза не получилось.
+Tape activity ↔ current volatility: **0.76**; flow imbalance ↔ current direction: **0.28**. Controlling for price leaves activity's association with future volatility around 0.28 in a descriptive partial correlation, but no stable weekly forecasting improvement emerged.
 
-**53,3% notional** приходится на блоки/комбо/RFQ. Публичный endpoint описывает direction как сторону тейкера, но это не наблюдаемая inventory дилера и не его hedge. Для сложных сделок отдельные ноги не являются независимыми ставками на направление. [Deribit API](https://docs.deribit.com/api-reference/market-data/public-get_last_trades_by_currency). В исследовании Amberdata, опубликованном Deribit, отдельно обсуждаются проблемы интерпретации aggressor direction и допущения «taker=trader, maker=dealer». [Первоисточник](https://insights.deribit.com/industry/decoding-option-flows-q2-2023/).
+**53.3% of notional** is block/combo/RFQ. The public endpoint defines direction as the taker side, not observed dealer inventory or hedge. Individual legs of complex trades are not independent directional bets. [Deribit API](https://docs.deribit.com/api-reference/market-data/public-get_last_trades_by_currency). Amberdata's research published by Deribit separately discusses aggressor-direction interpretation and the “taker=trader, maker=dealer” assumption. [Primary source](https://insights.deribit.com/industry/decoding-option-flows-q2-2023/).
 
-### Gamma: карта unsigned концентрации, не знак хеджирования
+### Gamma: an unsigned concentration map, not a hedging sign
 
-Снимки содержат распределение чувствительности по страйкам. Это может быть полезным контекстом для наблюдения уровней, но здесь не проверялась исполнимая торговля от каждого отдельного gamma-wall. Знак дилеров из gamma×OI не известен. Ни направление, ни силу движения нельзя однозначно вывести из «большой gamma». Проверены только фиксированные асимметрия/сумма в ±5%, не все возможные применения цепочки.
+Snapshots describe sensitivity across strikes. This may provide context for observing levels, but executable trading at individual gamma walls was not tested here. Gamma×OI does not reveal dealer-position signs. Neither movement direction nor magnitude follows unambiguously from “large gamma”. Only fixed asymmetry/total within ±5% were tested, not every use of the option chain.
 
-## 4. Основные результаты прогноза на следующих неделях
+## 4. Primary forecasting results in subsequent weeks
 
-Числа — **процент изменения ошибки прогноза MSE относительно модели только цены/волатильности**. Плюс лучше, минус хуже. Это не доходность и не рост win rate. У каждого набора свой полный набор доступных строк; сравнивать рейтинг наборов как абсолютно одинаковый турнир нельзя.
+Figures are **percentage changes in forecast MSE relative to the price/volatility-only model**, expressed as improvement: positive is better, negative worse. They are not returns or increases in win rate. Each feature set has its own complete available observations, so the ranking is not an identical-sample tournament.
 
-| Добавка к цене | Доходность следующих 4h: изменение ошибки | Волатильность следующих 4h: изменение ошибки | N теста доходность / волатильность |
+| Addition to price | Next-4h return: error improvement | Next-4h volatility: error improvement | Test N: return / volatility |
 |---|---:|---:|---:|
-| OI | +0,3% | −0,9% | 118 / 119 |
-| Funding | −2,0% | −1,1% | 118 / 119 |
-| Ликвидации | −1,9% | −2,0% | 117 / 118 |
-| Gamma | −3,9% | +2,2% | 52 / 53 |
-| Tape | −0,4% | −2,9% | 92 / 93 |
-| OI + funding | −2,0% | −2,0% | 118 / 119 |
-| OI + ликвидации | +1,8% | −3,5% | 117 / 118 |
-| OI + tape | −0,4% | −8,0% | 92 / 93 |
-| Funding + ликвидации | −5,9% | −2,7% | 117 / 118 |
-| Gamma + tape | −3,8% | **+9,8%** | 52 / 53 |
-| Ликвидации + tape | −1,3% | −7,1% | 91 / 92 |
-| Все пять | −3,3% | −8,5% | 51 / 52 |
+| OI | +0.3% | −0.9% | 118 / 119 |
+| Funding | −2.0% | −1.1% | 118 / 119 |
+| Liquidations | −1.9% | −2.0% | 117 / 118 |
+| Gamma | −3.9% | +2.2% | 52 / 53 |
+| Tape | −0.4% | −2.9% | 92 / 93 |
+| OI + funding | −2.0% | −2.0% | 118 / 119 |
+| OI + liquidations | +1.8% | −3.5% | 117 / 118 |
+| OI + tape | −0.4% | −8.0% | 92 / 93 |
+| Funding + liquidations | −5.9% | −2.7% | 117 / 118 |
+| Gamma + tape | −3.8% | **+9.8%** | 52 / 53 |
+| Liquidations + tape | −1.3% | −7.1% | 91 / 92 |
+| All five | −3.3% | −8.5% | 51 / 52 |
 
-**Ни одна из 24 основных проверок не значима даже по наивному одностороннему суточному sign-flip до поправки; после Holm все p=1.** Это не вероятность того, что эффекта нет, и не вывод об истинной нулевой связи. Положительные результаты имеют широкие интервалы и нестабильны по неделям.
+**None of the 24 primary tests is significant even under the naive one-sided daily sign-flip before correction; all Holm-adjusted p-values are 1.** This is not the probability that no effect exists, nor a conclusion of a truly zero association. Positive results have wide intervals and vary across weeks.
 
-Две наиболее заметные положительные цифры:
+The two most notable positive results:
 
-- **OI + ликвидации, будущая доходность:** +1,8%, интервал примерно **[−5,3%; +6,8%]**, лучше baseline в **2 из 5** недельных блоков. На том же полном наборе эта пара лучше одного OI примерно на 1,5%, одних ликвидаций на 3,6%, но интервалы также включают ноль.
-- **Gamma + tape, будущая волатильность:** +9,8%, интервал **[−9,0%; +24,7%]**, **53 наблюдения / 14 суток / 3 блока**, лучше baseline в 2 из 3. При исключении block/combo/RFQ результат становится **−1,2%**. Называть эту связь «агрессивный поток предсказывает риск» нельзя: она зависит от состава ленты и не прошла проверку устойчивости.
+- **OI + liquidations, future return:** +1.8%, interval approximately **[−5.3%; +6.8%]**, better than baseline in **2 of 5** weekly blocks. On the same complete sample, the pair beats OI alone by about 1.5% and liquidations alone by 3.6%, but those intervals also include zero.
+- **Gamma + tape, future volatility:** +9.8%, interval **[−9.0%; +24.7%]**, **53 observations / 14 days / 3 blocks**, better than baseline in 2 of 3. Excluding block/combo/RFQ changes the result to **−1.2%**. This cannot be called “aggressive flow predicts risk”: it depends on tape composition and did not pass the stability check.
 
-Совместная модель всех пяти не превосходит цену. Это не значит, что «чем больше данных, тем хуже всегда», а показывает, что на маленькой выборке механическое соединение признаков не создаёт дополнительную информацию автоматически.
+The joint all-five model does not beat price. This does not mean “more data always makes things worse”; it shows that mechanically combining features does not automatically add information in a small sample.
 
-## 5. Пороговые события и сравнение с похожими рыночными моментами
+## 5. Threshold events and comparisons with similar market moments
 
-Пороги взяты только из первых 14 суток, затем не менялись. High liquidations — верхний дециль активности начального периода, около $11,8 млн/4h. High tape — около $503 млн/4h. Это относительные пороги discovery, не рекомендованные настройки сигналов.
+Thresholds use only the first 14 days and then remain fixed. High liquidations means the initial activity's upper decile, about $11.8 million/4h. High tape is about $503 million/4h. These are relative discovery thresholds, not recommended signal settings.
 
-| Событие после начального периода | N / суток | Медиана абсолютного следующего 4h хода | У похожих по цене/волатильности контрольных моментов |
+| Event after the initial period | N / days | Median absolute next-4h move | Price/volatility-matched controls |
 |---|---:|---:|---:|
-| Крупные ликвидации | 16 / 10 | 0,52% | 0,37% |
-| Крупные ликвидации + падение OI | 12 / 7 | 0,52% | 0,37% |
-| Крупная активность tape | 21 / 12 | 0,42% | 0,35% |
-| Большая unsigned gamma в полосе | 14 / 6 | 0,25% | 0,37% |
+| Large liquidations | 16 / 10 | 0.52% | 0.37% |
+| Large liquidations + OI decline | 12 / 7 | 0.52% | 0.37% |
+| High tape activity | 21 / 12 | 0.42% | 0.35% |
+| Large unsigned gamma in the band | 14 / 6 | 0.25% | 0.37% |
 
-Это описательные намёки, не независимые подтверждения: мало дней, контролы могут повторяться, отсутствует жёсткий caliper качества matching. Например, медианная будущая RV после крупных ликвидаций 0,67% против 0,65% у matched control — почти одинаково. У OI-down+liq также 0,67% против 0,67%. Не следует выбирать один удобный показатель и объявлять преимущество.
+These are descriptive hints, not independent confirmations: few days, potentially reused controls, and no strict matching-quality caliper. For example, median future RV after large liquidations is 0.67% versus 0.65% for matched controls—almost identical. OI-down+liquidations gives 0.67% versus 0.67%. Selecting one convenient metric does not establish an edge.
 
-Ещё один заданный режим — цена вниз / OI вверх / funding ниже начального нижнего дециля — встретился 19 раз в 11 сутках. Медиана следующего 4h хода −0,12% против +0,16% у контролей. Но funding-порог **+0,0027244%** (положительный!), не универсальный «экстремально отрицательный funding»; он отражает начальный период и изменение режима. Это не найденное правило шорта. Противоположный режим с высоким funding и ростом цены/OI встретился всего один раз — оценивать нечего.
+Another predefined regime—price down / OI up / funding below the initial bottom decile—occurred 19 times across 11 days. Median next-4h return was −0.12% versus +0.16% for controls. But the funding threshold is **+0.0027244%** (positive!), not universally “extremely negative funding”; it reflects the initial period and regime change. This is not a discovered short rule. The opposite regime, high funding with price/OI rising, occurred only once; it cannot be evaluated.
 
-24h корреляционные диагностики также сохранены (`descriptive_correlations.csv`), но окна перекрываются, и они не использованы для выбора «удачного» горизонта после отрицательного 4h результата.
+24h correlation diagnostics are also saved (`descriptive_correlations.csv`), but their windows overlap, and they were not used to select a favourable horizon after the negative 4h result.
 
-## 6. Что можно извлечь и чего не обещать
+## 6. What can be extracted, and what cannot be promised
 
-**Карточка наблюдения, которую уже можно построить из имеющихся полей: собственная цена/волатильность + изменение OI + фактическая сторона ликвидаций + условия funding + активность/состав tape.** Она различает измеренные процессы и помогает задавать правильный вопрос: закрывается ли плечо, появляются ли новые контракты, есть ли принудительные закрытия, насколько надёжен опционный поток и сколько стоит удержание.
+**An observation card can already be built from the existing fields: price/volatility + OI change + actual liquidation side + funding conditions + tape activity/composition.** It distinguishes measured processes and helps formulate questions: is leverage closing, are new contracts appearing, are forced closures occurring, how reliable is option flow, and what does holding cost?
 
-Но ценность такой карточки для решений ещё не измерена. Её нельзя автоматически назвать прибыльным радаром или доказанным предупреждением до движения. Сильные одновременные связи сами по себе не добавляют ранности.
+Its decision value has not been measured. It cannot automatically be called a profitable radar or proven advance warning. Strong contemporaneous relationships do not themselves add early detection.
 
-**Оправданные направления дальнейшей адресной проверки, а не новая очередь перебора:**
+**Justified focused research directions, not another queue of searches:**
 
-1. Описательные режимы OI/ликвидаций — проверять, дают ли они дополнительный ответ о дальнейшем восстановлении/продолжении после сравнимого движения цены. Нынешние 12–19 событий дают постановку, не правило.
-2. Опционный риск-контекст — сначала разделить интерпретацию обычных и структурных сделок и соблюдать реальное recv-time. Нельзя складывать все ноги в один якобы дилерский flow. Изменение интерпретации не равно разрешению править сборщики.
-3. Держать протокол/определения замороженными при накоплении новых событий; не объявлять следующие недели независимым подтверждением, если правила снова изменены после их просмотра.
+1. OI/liquidation descriptive regimes: test whether they add information about recovery/continuation after comparable price moves. The current 12–19 events define the question, not a rule.
+2. Option-risk context: first distinguish ordinary and structured trade interpretation and respect actual receive times. Do not add every leg into a supposedly dealer-specific flow. Changing the interpretation does not authorise changes to collectors.
+3. Keep protocols/definitions frozen while collecting new events. Subsequent weeks are not independent confirmation if rules change again after inspection.
 
-Результат этой работы — не рекомендация закрывать потоки. Это карта того, что они уже измеряют, и граница между текущим контекстом и неустановленным прогнозным преимуществом.
+This work does not recommend shutting down the feeds. It maps what they already measure and the boundary between current context and an unestablished predictive edge.
 
-## 7. Проверки и сохранение
+## 7. Checks and preservation
 
-`checks.py`: PASS — год/уникальность времени, границы imbalance, завершение gamma до T, независимый пересчёт будущей RV, независимый tape join по exchange+recv, 24 теста, уникальность predictions, пересчёт MSE, неизменность bot_v2.py.
+`checks.py`: PASS — year/time uniqueness, imbalance bounds, gamma completion before T, independent future-RV recalculation, independent tape join on exchange+receive times, 24 tests, unique predictions, MSE recalculation, and unchanged bot_v2.py.
 
-Артефакты: `PROTOCOL.md`, `build.py`, `analyze.py`, `checks.py`; `hourly_features.csv`, `model_results.csv`, `pair_vs_components.csv`, `screen_tape_sensitivity.csv`, `descriptive_correlations.csv`, `event_summary.csv`, `event_cases.csv`, `data_qa.json`, `forward_comparison.png`, `unwind_example.png`, `manifest.json`.
+Artifacts: `PROTOCOL.md`, `build.py`, `analyze.py`, `checks.py`; `hourly_features.csv`, `model_results.csv`, `pair_vs_components.csv`, `screen_tape_sensitivity.csv`, `descriptive_correlations.csv`, `event_summary.csv`, `event_cases.csv`, `data_qa.json`, `forward_comparison.png`, `unwind_example.png`, `manifest.json`.
 
-Код, процессы и исходные CSV сборщиков не менялись. Новых загрузок рыночных данных, ордеров и сообщений не было. Проверка финансовой механики использовала официальную документацию; вычисления — только локальные данные. Независимого аудита другим ИИ ещё нет.
+Collector code, processes, and original CSVs were unchanged. No new market-data downloads, orders, or messages. Financial-mechanics checks used official documentation; calculations used local data only. No independent audit by another AI has yet been conducted.
